@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: base.el,v 1.4 2001-11-09 20:24:46 flepied Exp $
+;; Version: $Id: base.el,v 1.5 2004-05-05 06:56:39 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -343,6 +343,8 @@ Upon exit from recursive edit, restore restrictions, point and mark." t nil)
 ;;==============================================================================
 (setq ediff-split-window-function 'split-window-horizontally)
 (setq ediff-merge-split-window-function 'split-window-horizontally)
+
+(global-set-key [(control c) ?=] (function (lambda() (interactive) (diff-backup (buffer-file-name (current-buffer))))))
 
 ;;==============================================================================
 ;; ignore les extensions .g et .so dans la completion des fichiers
