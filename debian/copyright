@@ -11,6 +11,7 @@ cvs			1.31	GPL	http://www.teaser.fr/~flepied/cvs.el.gz
 comment			1.4		ftp://alpha.gnu.ai.mit.edu/friedman/comment.el
 checkdoc		0.5	GPL	ftp://ftp.ultranet.com/pub/zappo/checkdoc-*.el
 counter			0.10	GPL	http://www.eskimo.com/~seldon
+crypt++			2.88	GPL	ftp://ftp.cs.umb.edu/pub/misc/crypt++.el
 cwarn			1.2	GPL	http://www.andersl.com/emacs
 debian-bug		1.4	GPL	
 defaultbanner		1.9		ftp://ftp.inria.fr/INRIA/Projects/icsla/WWW/elisp.html
