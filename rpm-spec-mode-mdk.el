@@ -80,6 +80,11 @@ in \"%build\" and \"%install\" stage."
   :type 'boolean
   :group 'rpm-spec)
 
+(defcustom rpm-spec-no-deps nil
+  "Do not verify the dependencies."
+  :type 'boolean
+  :group 'rpm-spec)
+
 (defcustom rpm-spec-timecheck "0"
   "Set the \"timecheck\" age (0 to disable).
 The timecheck value expresses, in seconds, the maximum age of a file
@@ -223,7 +228,7 @@ the package."
   '(("Autoreqprov")
     ("Buildroot")
     ("Conflicts")
-    ("Copyright")
+    ("License")
     ("%description")
     ("Distribution")
     ("Excludearch")
@@ -356,9 +361,10 @@ the package."
        (set-keymap-name rpm-spec-mode-map 'rpm-spec-mode-map))
   (define-key rpm-spec-mode-map "\C-ca" 'rpm-build-ba)
   (define-key rpm-spec-mode-map "\C-cb" 'rpm-build-bb)
-  (define-key rpm-spec-mode-map "\C-cc" 'rpm-build-bc)
+  (define-key rpm-spec-mode-map "\C-cC" 'rpm-build-bc)
   (define-key rpm-spec-mode-map "\C-ce" 'rpm-add-change-log-entry)
   (define-key rpm-spec-mode-map "\C-cs" 'rpm-toggle-short-circuit)
+  (define-key rpm-spec-mode-map "\C-cd" 'rpm-toggle-no-deps)
   (define-key rpm-spec-mode-map "\C-cg" 'rpm-goto-section)
   (define-key rpm-spec-mode-map "\C-ci" 'rpm-build-bi)
   (define-key rpm-spec-mode-map "\C-cl" 'rpm-build-bl)
@@ -373,6 +379,7 @@ the package."
   (define-key rpm-spec-mode-map "\C-cxp" 'rpm-change-target-option)
   (define-key rpm-spec-mode-map "\C-cxr" 'rpm-toggle-rmsource)
   (define-key rpm-spec-mode-map "\C-cxs" 'rpm-toggle-short-circuit)
+  (define-key rpm-spec-mode-map "\C-cxd" 'rpm-toggle-no-deps)
   (define-key rpm-spec-mode-map "\C-cxt" 'rpm-toggle-test)
   ;;May be better to have movement commands on \C-ck, and build on \C-c\C-k
   (define-key rpm-spec-mode-map "\C-c\C-i" 'rpm-insert-tag)
@@ -424,6 +431,8 @@ the package."
          ("Build Options"
           ["Short Circuit" rpm-toggle-short-circuit
            :style toggle :selected rpm-spec-short-circuit]
+          ["No deps" rpm-toggle-no-deps
+           :style toggle :selected rpm-spec-no-deps]
           ["Remove source" rpm-toggle-rmsource
            :style toggle :selected rpm-spec-rmsource]
           ["Clean"         rpm-toggle-clean
@@ -703,7 +712,7 @@ controls whether case is significant."
                                      "" "" nil (match-string 1)))))
         (message (concat what " number \"" number "\" not found..."))))))
 
-(defun rpm-insert-group (group)
+(defun rpm-insert-group (&optional group)
   "Insert Group tag."
   (interactive (list (rpm-completing-read "Group: " rpm-group-tags-list)))
   (beginning-of-line)
@@ -830,7 +839,7 @@ leave point at previous location."
 (defun rpm-build (buildoptions)
   "Build this rpm-package."
   (setq rpm-buffer-name
-        (concat "*rpm " buildoptions " "
+        (concat "*rpm "
                 (file-name-nondirectory buffer-file-name) "*"))
   (rpm-process-check rpm-buffer-name)
   (if (get-buffer rpm-buffer-name)
@@ -846,6 +855,8 @@ leave point at previous location."
       (setq buildoptions (cons "--clean" buildoptions)))
   (if rpm-spec-short-circuit
       (setq buildoptions (cons "--short-circuit" buildoptions)))
+  (if rpm-spec-no-deps
+      (setq buildoptions (cons "--nodeps" buildoptions)))
   (if (and (not (equal rpm-spec-timecheck "0"))
            (not (equal rpm-spec-timecheck "")))
       (setq buildoptions (cons "--timecheck" (cons rpm-spec-timecheck
@@ -895,7 +906,7 @@ leave point at previous location."
   (rpm-build "-bi"))
 
 (defun rpm-build-bb (&optional arg)
-  "Run a `rpm -ba'."
+  "Run a `rpm -bb'."
   (interactive "p")
   (setq rpm-no-gpg nil)
   (rpm-build "-bb"))
@@ -905,6 +916,12 @@ leave point at previous location."
   (interactive "p")
   (setq rpm-no-gpg nil)
   (rpm-build "-ba"))
+
+(defun rpm-build-bs (&optional arg)
+  "Run a `rpm -bs'."
+  (interactive "p")
+  (setq rpm-no-gpg nil)
+  (rpm-build "-bs"))
 
 (defun rpm-process-check (buffer)
   "Check if BUFFER has a running process.
@@ -926,6 +943,14 @@ command."
   (rpm-update-mode-name)
   (message (concat "Turned `--short-circuit' "
                    (if rpm-spec-short-circuit "on" "off") ".")))
+
+(defun rpm-toggle-no-deps (&optional arg)
+  "Toggle rpm-spec-no-deps."
+  (interactive "p")
+  (setq rpm-spec-no-deps (not rpm-spec-no-deps))
+  (rpm-update-mode-name)
+  (message (concat "Turned `--nodeps' "
+                   (if rpm-spec-no-deps "on" "off") ".")))
 
 (defun rpm-toggle-rmsource (&optional arg)
   "Toggle rpm-spec-rmsource."
@@ -975,6 +1000,7 @@ command."
 							 (if rpm-spec-sign-gpg      "G")
 							 (if rpm-spec-rmsource      "R")
 							 (if rpm-spec-short-circuit "S")
+							 (if rpm-spec-no-deps	    "D")
 							 (if rpm-spec-test          "T")
 							 ))
   (if (not (equal modes ""))
@@ -1023,11 +1049,11 @@ command."
   (interactive "p")
   (save-excursion
     (goto-char (point-min))
-    (if (search-forward-regexp "^Release:\\([ \t]*\\)\\([0-9]+\\)\\(.*\\)" nil t)
-        (let ((release (1+ (string-to-int (match-string 2)))))
-          (setq release (concat (match-string 1) (int-to-string release) (match-string 3)))
+    (if (search-forward-regexp "^Release:\\([ \t]*\\)\\(\\([^.\n]+\\.\\)*\\)\\([0-9]+\\)\\(.*\\)" nil t)
+        (let ((release (1+ (string-to-int (match-string 4)))))
+          (setq release (concat (match-string 1) (match-string 2) (int-to-string release) (match-string 5)))
           (replace-match (concat "Release:" release))
-          (message (concat "Release tag space changed to " release ".")))
+          (message (concat "Release tag changed to " release ".")))
       (if (search-forward-regexp "^Release:[ \t]*%{?\\([^}]*\\)}?$" nil t)
 	  (rpm-increase-release-with-macros)
 	(message "No Release tag found...")))))
@@ -1074,14 +1100,15 @@ command."
                                            (match-end 1)))
                    (search-forward-regexp
                     (concat "%define[ \t]+" macros
-                            "\\([ \t]+\\)\\(\\([0-9]\\|\\.\\)+\\)\\(.*\\)"))
-                   (concat macros (match-string 1) (int-to-string (1+ (string-to-int
-								       (match-string 2))))
-                           (match-string 4)))
+                            "\\([ \t]+\\)\\(\\([^.\n]+\\.\\)*\\)\\([0-9]+\\)\\(.*\\)"))
+                   (concat macros (match-string 1) (match-string 2)
+			   (int-to-string (1+ (string-to-int
+					       (match-string 4))))
+                           (match-string 5)))
                str)))
         (setq dinrel inrel)
         (replace-match (concat "%define " dinrel))
-        (message (concat "Release tag changed to " dinrel "."))))))
+        (message (concat "Release macro tag changed to " dinrel "."))))))
 
 ;;------------------------------------------------------------
 
@@ -1111,7 +1138,7 @@ command."
 	    "\nVersion: %{version}" 
 	    "\nRelease: %{release}"
 	    "\nSource0: %{name}-%{version}.tar.bz2"
-	    "\nCopyright: \nGroup: "
+	    "\nLicense: \nGroup: "
 	    "\nBuildRoot: %{_tmppath}/%{name}-buildroot\nPrefix: %{_prefix}"
 	    "\n\n%description\n"
 	    "\n%prep\n%setup\n\n%build\n\n%install\nrm -rf $RPM_BUILD_ROOT"
@@ -1126,7 +1153,7 @@ command."
   (save-excursion
     (let ((str (progn
 		 (goto-char (point-min))
-		 (search-forward-regexp (concat field ":[ 	]*\\(.+\\).*$") max)
+		 (search-forward-regexp (concat field "[ 	]*:[ 	]*\\(.+\\).*$") max)
 		 (match-string 1) )))
       (if (string-match "%{?\\([^}]*\\)}?$" str)
 	  (progn
