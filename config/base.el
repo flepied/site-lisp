@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: base.el,v 1.5 2004-05-05 06:56:39 flepied Exp $
+;; Version: $Id: base.el,v 1.6 2004-06-15 09:02:42 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -209,16 +209,8 @@ Upon exit from recursive edit, restore restrictions, point and mark." t nil)
       ))
 
 ;;=============================================================================
-;; Pour avoir les accents.
+;; pas de toolbar en emacs 21
 ;;=============================================================================
-(set-input-mode (car (current-input-mode))
-                (nth 1 (current-input-mode))
-                0)
-
-(standard-display-european 1)
-;(require 'iso-syntax)
-
-; pas de toolbar en emacs 21
 (if (fboundp 'tool-bar-mode)
     (tool-bar-mode 0))
 
