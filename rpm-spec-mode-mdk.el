@@ -106,6 +106,11 @@ the package."
   :type 'boolean
   :group 'rpm-spec)
 
+(defcustom rpm-insert-version t
+  "Automatically add version in a new changelog entry"
+  :type 'boolean
+  :group 'rpm-spec)
+
 (defgroup rpm-spec-faces nil
   "Font lock faces for RPM Spec mode."
   :group 'rpm-spec
@@ -497,7 +502,11 @@ with no args, if that value is non-nil."
     (if (search-forward-regexp "^%changelog[ \t]*$" nil t)
 	(let ((string (concat "* " (substring (current-time-string) 0 11)
 			      (substring (current-time-string) -4) " "
-			      (user-full-name) " <" user-mail-address ">")))
+			      (user-full-name) " <" user-mail-address "> "
+			      (or (and rpm-insert-version
+				   (rpm-find-spec-version))
+				  "")
+				   )))
 	  (if (not (search-forward string nil t))
 	      (insert "\n" string "\n\n")
 	    (next-line 2)
@@ -983,6 +992,29 @@ command."
     (rpm-add-change-log-entry "First spec file for Mandrake distribution.\n"))
   )
 
+;;------------------------------------------------------------
+(defun rpm-spec-field-value (field max)
+  (save-excursion
+    (let ((str (progn
+		 (goto-char (point-min))
+		 (search-forward-regexp (concat field ": *\\(.+\\).*$") max)
+		 (match-string 1) )))
+      (if (string-match "%{\\(.*\\)}" str)
+	  (progn
+	    (goto-char (point-min))
+	    (search-forward-regexp (concat "%define +" (substring str (match-beginning 1)
+								  (match-end 1) )
+					   " +\\(.*\\)"))
+	    (match-string 1) )
+	str) ) ) )
+
+(defun rpm-find-spec-version ()
+  (save-excursion
+    (goto-char (point-min))
+    (let* ((max (search-forward-regexp rpm-section-regexp))
+	   (version (rpm-spec-field-value "Version" max))
+	   (release (rpm-spec-field-value "Release" max)) )
+      (concat version "-" release))))
 
 ;;------------------------------------------------------------
 
