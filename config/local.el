@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: local.el,v 1.1 1999-12-09 07:34:42 flepied Exp $
+;; Version: $Id: local.el,v 1.2 2004-06-17 06:59:37 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -32,7 +32,7 @@
 ;;==============================================================================
 ;; Définitions des proxies.
 ;;==============================================================================
-(setenv "http_proxy" "http://www:8080")
+;(setenv "http_proxy" "http://proxy:3128")
 ;(setenv "ftp_proxy" "http://www:8080")
 
 (setq elisp-archive-host "ftp.ibp.fr"
