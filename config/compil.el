@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: compil.el,v 1.1 1999-12-09 07:34:42 flepied Exp $
+;; Version: $Id: compil.el,v 1.2 2004-05-05 06:57:04 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -323,7 +323,7 @@ Bound on \\[mode-compile-kill]." t nil)
 (setq igrep-options "-i")		; ignore case
 )
 
-(setq igrep-use-zgrep t)		; use zgrep
+(setq igrep-use-zgrep nil)		; use zgrep
 
 (global-set-key [(control c) ?c] 'mode-compile)
 (global-set-key [(control c) ?k] 'mode-compile-kill)
