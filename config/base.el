@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: base.el,v 1.6 2004-06-15 09:02:42 flepied Exp $
+;; Version: $Id: base.el,v 1.7 2004-06-17 06:58:45 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -23,22 +23,6 @@ the variables background-show and background-select." t)
 
 
 ;;;###
-
-;;;***
-
-;;;### (autoloads (diff-mode) "diff-mode" "../diff-mode.el" (14309 59906))
-;;; Generated autoloads from ../diff-mode.el
-
-(defadvice vc-backend-diff (around diff-mode-vc activate) (condition-case nil (with-current-buffer "*vc-diff*" (setq buffer-read-only nil)) (error nil)) ad-do-it (condition-case nil (with-current-buffer "*vc-diff*" (if (memq major-mode (quote (fundamental-mode diff-mode))) (diff-mode))) (error nil)))
-
-(autoload (quote diff-mode) "diff-mode" "\
-Major mode for viewing context diffs.
-Supports unified and context diffs as well as (to a lesser extent) normal diffs.
-When the buffer is read-only, the ESC prefix is not necessary.
-This mode runs `diff-mode-hook'.
-\\{diff-mode-map}" t nil)
-
-(add-to-list (quote auto-mode-alist) (quote ("\\.\\(diff\\|patch\\|rej\\)\\'" . diff-mode)))
 
 ;;;***
 
@@ -168,6 +152,11 @@ Upon exit from recursive edit, restore restrictions, point and mark." t nil)
 ;;=============================================================================
 (add-hook 'write-file-hooks 'update-file-header)
 (setq  make-header-hooks '())
+
+;;=============================================================================
+;;=============================================================================
+(eval-after-load "diff"
+  '(defun diff-write-contents-hooks ()))
 
 ;;=============================================================================
 ;; Anonymous ftp if no user supplied.
