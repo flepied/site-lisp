@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: template.el,v 1.1 1999-12-09 07:34:42 flepied Exp $
+;; Version: $Id: template.el,v 1.2 1999-12-09 09:28:47 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -25,7 +25,7 @@
 (require 'defaultbanner)
 
 (defvar project-name "")
-(defvar project-version-string "$Id: template.el,v 1.1 1999-12-09 07:34:42 flepied Exp $")
+(defvar project-version-string (concat "$Id" "$"))
 
 (setq dc-auto-insert-directory (expand-file-name "~/templates/"))
 
