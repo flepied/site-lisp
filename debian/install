@@ -1,0 +1,24 @@
+#! /bin/bash
+# /usr/lib/emacsen-common/packages/install/site-lisp
+
+FLAVOR=$1
+echo install/site-lisp: Handling install of emacsen flavor ${FLAVOR}
+
+el_dir=/usr/share/emacs/site-lisp/
+elc_dir=/usr/share/${FLAVOR}/site-lisp
+log=site-lisp.log
+
+if [ ${FLAVOR} != emacs ]; then
+    echo install/site-lisp: byte-compiling for ${FLAVOR}
+
+    cd ${el_dir}
+    rm -f $log $elc_dir/$log
+    make -f Makefile.site-lisp all EMACS=${FLAVOR} > $log 2>&1
+    make -f Makefile.site-lisp install DESTDIR=${elc_dir} >> $log 2>&1
+    make -f Makefile.site-lisp clean >> $log 2>&1
+    mv $log $elc_dir
+    echo "compile log saved in $elc_dir/$log"
+fi
+exit 0
+
+

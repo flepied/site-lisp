@@ -1,0 +1,16 @@
+#!/bin/sh
+# /usr/lib/emacsen-common/packages/remove/site-lisp
+
+# I don't think that remove scripts should have -e set, because
+# that makes the package unremovable if the script fails.
+# set -e 
+
+FLAVOR=$1
+echo remove/site-lisp: Handling removal of emacsen flavor ${FLAVOR}
+
+if [ ${FLAVOR} != emacs ]; then
+
+    echo remove/site-lisp: purging byte-compiled files for ${FLAVOR}
+    make -f /usr/share/emacs/site-lisp/Makefile.site-lisp cleaninstall DESTDIR=/usr/share/${FLAVOR}/site-lisp
+fi
+exit 0

@@ -1,0 +1,37 @@
+site-lisp for DEBIAN
+----------------------
+
+Function keys defined by the site-lisp package :
+
+Default key bindings :
+
+F1:		man unix
+F2:		compilation
+control F2:	compilation based on buffer mode
+F3:		revert buffer to file
+F4:		indent region
+F5:		find the corresponding file (ie. file.h for file.c)
+F6:		execute command
+F7:		go to line
+F8:		insert a time stamp at point
+F9:		execute command on region
+F10:		go to next error (found from last compile or grep command)
+F11:		complete file name at point
+F12:		insert the path of the file corresponding to the current buffer
+
+calendar config :
+
+C-c t		Show TODO list.
+C-c i		Insert a todo entry,
+C-c C-s		Show a steno pad.
+
+emacs lisp mode :
+
+F5:		eval region
+F6:		eval current buffer
+
+scheme mode:
+
+F2:		run scheme
+
+Frederic Lepied <Frederic.Lepied@sugix.frmug.org>, Fri, 31 Jan 1997 10:41:42 +0100

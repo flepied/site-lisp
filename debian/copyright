@@ -1,0 +1,59 @@
+This package was debianized by Frederic Lepied <Lepied@sugix.frmug.org> on
+Fri, 31 Jan 1997 10:41:42 +0100.
+
+NAME			VERSION	COPYRIGHT	URL
+
+background		???
+cfg			???	GPL
+codeline		1.1
+cvs			1.31	GPL	http://www.teaser.fr/~flepied/cvs.el.gz
+comment			1.4		ftp://alpha.gnu.ai.mit.edu/friedman/comment.el
+checkdoc		0.5	GPL	ftp://ftp.ultranet.com/pub/zappo/checkdoc-*.el
+counter			0.10	GPL	http://www.eskimo.com/~seldon
+cwarn			1.2	GPL	http://www.andersl.com/emacs
+debian-bug		1.4	GPL	
+defaultbanner		1.9		ftp://ftp.inria.fr/INRIA/Projects/icsla/WWW/elisp.html
+defaultcontent		1.25		ftp://ftp.inria.fr/INRIA/Projects/icsla/WWW/elisp.html
+desktop-phase		1.7	GPL
+diff-mode		1.8	GPL	ftp://flint.cs.yale.edu/pub/monnier/misc
+eldoc         		1.9		ftp://alpha.gnu.ai.mit.edu/friedman/eldoc.el
+expand			1.9	GPL	http://www.teaser.fr/~flepied/expand.el.gz
+feedmail		8		http://www.carpenter.org/feedmail/feedmail.html
+file-log      		1.7		http://www.teaser.fr/~flepied/file-log.el.gz
+flashparen		1.12		ftp://alpha.gnu.ai.mit.edu/friedman/flashparen.el
+fnexpand		1.5	GPL
+foldingo      		1.12		ftp://ftp.inria.fr/INRIA/Projects/icsla/WWW/elisp.html
+font-lock-menu		1.01
+globrep			2.1	GPL
+granny			1.11	GPL
+html-helper-mode	2.19.1.1 GPL	http://www.santafe.edu/~nelson/hhm-beta/
+igrep         		2.56	GPL
+iso-sgml		1.4
+lazy-lock     		2.07.01	GPL
+lispdir       		4.3
+locate			2.0	GPL
+m4-mode       		1.6
+man-xref      		1.6
+mode-compile  		2.25	GPL	ftp://ftp.cenatls.cena.dgac.fr/pub/export/mode-compile.el.Z
+mode-line     		1.2
+module			???	GPL
+mouse-extras  		2.21		http://www.isi.edu/~johnh/SOFTWARE/mouse-extras.el
+orig			1.1	GPL	http://www.teaser.fr/~flepied/
+pdb			1.4		ftp://ftp.aifb.uni-karlsruhe.de/pub/wwe/pdb.el
+python-mode		3.87	GPL	ftp://ftp.python.org/pub/emacs/python-mode.el
+refontify     		???
+rpm-spec-mode-mdk	0.08a	GPL	ftp://ftp.mandrakesoft.com/pub/chmou/
+simple-merge-mode	1.5	GPL	
+slashdot		0.0.6	GPL	http://www.tardis.ed.ac.uk/~skx/
+steno			1.1	GPL
+timeclock		2.0	GPL	http://www.emacs.org/~johnw/emacs.html
+todomode		1.12	GPL
+vapropos		1.0	GPL
+webjump       		1.4		http://www.cs.brown.edu/people/nwv/
+which-function		1.4	GPL	http://www.teaser.fr/~flepied/which-function.el.gz
+word-help		1.23
+xrdb-mode		2.24	GPL	http://www.python.org/emacs/
+Copyright:
+
+GPL  stands for  GNU General  Public  License  and is available  under
+/usr/doc/copyright/GPL.

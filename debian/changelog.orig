@@ -1,0 +1,278 @@
+site-lisp (2.0.15) unstable; urgency=low
+
+  * added orig.el.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Wed, 24 Nov 1999 19:54:02 +0100
+
+site-lisp (2.0.14) unstable; urgency=low
+
+  * (prog): new contrib simple-merge-mode (minor or major mode to help
+  resolving conflicts from merge or diff3 output)
+  * flashparen 1.12.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Tue, 19 Oct 1999 20:30:50 +0200
+
+site-lisp (2.0.13) unstable; urgency=low
+
+  * (web): new contrib slashdot.
+  * (dpkg): new contrib debian-bug.
+  * diff-mode 1.8.
+  
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Sat,  9 Oct 1999 09:42:20 +0200
+
+site-lisp (2.0.12) unstable; urgency=low
+
+  * new config: rpm.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Thu,  7 Oct 1999 12:56:17 +0200
+
+site-lisp (2.0.11) unstable; urgency=low
+
+  * new contrib: diff-mode.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Mon, 20 Sep 1999 10:04:04 +0200
+
+site-lisp (2.0.10) unstable; urgency=low
+
+  * (c-prog): ajout de cwarn.
+  * (prog): ajout d'un hook pour rendre exécutable les fichiers qui
+  débutent par !#.
+  
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Mon, 19 Jul 1999 16:18:18 +0200
+
+site-lisp (2.0.9) unstable; urgency=low
+
+  * (base): suppression de which-func-update.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Fri, 14 May 1999 15:37:44 +0200
+
+site-lisp (2.0.8) unstable; urgency=low
+
+  * (mail-news): utilisation d'a2ps pour imprimmer dans Gnus (touche i).
+  * (multiple): nouvelle config pour avoir des fenetres spécialisées.
+  * passage en numérotation package debian only.
+  * (compile): ajout de config-use-igrep pour éviter de charger igrep.
+  * (html): ajout de config-use-igrep pour éviter de charger iso-sgml.
+  * (scheme): correction de la fonction d'indentation.
+  * (html-helper-mode.el): version 2.19.1.1.
+  
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Mon, 15 Mar 1999 15:59:13 +0100
+
+site-lisp (2.0-7) unstable; urgency=low
+
+  * xrdb-mode 2.24
+  * python-mode 3.87
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Thu,  5 Nov 1998 15:04:15 +0100
+
+site-lisp (2.0-6) unstable; urgency=low
+
+  * les templates sont maintenant cherchés dans ~/templates/.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Tue, 22 Sep 1998 11:45:52 +0200
+
+site-lisp (2.0-5) unstable; urgency=low
+
+  * (cvs.el): version 1.31.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Mon,  7 Sep 1998 14:05:41 +0200
+
+site-lisp (2.0-4) unstable; urgency=low
+
+  * (desktop-phase.el): bug fix pour fonctionner sous xemacs.
+  * (base.el): F1 liée à manual-entry pour fonctionner sous xemacs.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Thu, 16 Jul 1998 20:50:51 +0200
+
+site-lisp (2.0-3) unstable; urgency=low
+
+  * ajout d'un config html.
+  * ajout de html-helper-mode.el 2.19.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Tue, 30 Jun 1998 18:19:41 +0200
+
+site-lisp (2.0-2) unstable; urgency=low
+
+  * checkdoc.el 0.5.
+  * feedmail.el 8.
+  * nouvelle config single.el pour configuration de feedmail.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Thu, 21 May 1998 05:35:05 +0200
+
+site-lisp (2.0-1) unstable; urgency=low
+
+  * adaptation pour supporter les différents emacs.
+  * cvs.el 1.28.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Tue, 17 Feb 1998 18:38:48 +0100
+site-lisp (1.0-5) unstable; urgency=low
+
+  * cvs.el 1.27.
+  * base: correction suppression des .save (merci Martin).
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Tue, 17 Feb 1998 18:38:48 +0100
+
+site-lisp (1.0-4) unstable; urgency=low
+
+  * word-help.el 1.31
+  * (lisp-prog.el): added vapropos.el 1.0
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Sun,  4 Jan 1998 21:52:54 +0100
+
+site-lisp (1.0-3) local; urgency=low
+
+  * igrep.el 2.70.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Mon, 17 Nov 1997 20:50:29 +0100
+
+site-lisp (1.0-2) local; urgency=low
+
+  * cvs.el 1.25.
+  * ajout de steno.el à la config calendar.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Wed, 27 Aug 1997 08:37:02 +0200
+
+site-lisp (1.0-1) local; urgency=low
+
+  * passage en config à la demande : cfg.el.
+  * suppression de config.el.
+  * mouse-extras.el 2.21.
+  * ajout de todomode 1.12 à la config calendar.
+  * cvs 1.23.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Tue, 29 Jul 1997 09:11:07 +0200
+
+site-lisp (0.3-2) local; urgency=low
+
+  * nouveauté : module.el
+  * (20dired.el) ajout de deb-view.
+  * cvs 1.21.
+  * mode-compile 2.25.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Fri, 20 Jun 1997 07:44:34 +0200
+
+site-lisp (0.3-1) local; urgency=low
+
+  * (00options.el) nouveau fichier pour faire des options à passer sur la ligne
+  de commande.
+  * mode-compile 2.22.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Tue, 10 Jun 1997 08:28:39 +0200
+
+site-lisp (0.2-12) local; urgency=low
+
+  * (00base.el) changement du titre des frames et du modeline.
+  * (50compil.el) ajout de globrep.el.
+  * (20dired.el) ajout de locate.el.
+  * nouveau fichier vrac.el pour stocker les diverses petites fonctions
+  utilitaires.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Mon, 26 May 1997 11:51:24 +0200
+
+site-lisp (0.2-11) local; urgency=low
+
+  * (00base.el) ajout de header.el.
+  * checkdoc 0.3 utilitaire de vérification de contrib emacs lisp.
+  * (00base.el) remplacement de file-comp2.el par fnexpand.el.
+  * ajout d'une copie de la base de données des paquetages lisp
+  dans /usr/doc/site-lisp/LCD-datafile.gz.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Mon, 5 May 1997 16:02:11 +0200
+
+site-lisp (0.2-10) local; urgency=low
+
+  * (00base.el 20direl.el) binding de left et rigth pour naviguer facilement dans dired.
+  * mode-compile 2.20
+  * (00base.el): on passe -a comme option à la commande man pour avoir toutes les pages.
+  * ajout de 40perl-mode.el
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Thu, 3 Apr 1997 14:37:35 +0200
+
+site-lisp (0.2-9) local; urgency=low
+
+  * ajout d'une colonne COPYRIGHT pour chaque module lisp dans /usr/doc/site-lisp/copyright.
+  * lazy-lock 2.07.01
+  * python-mode 2.83
+  * pdb 1.4
+  * creation de 40python-prog.el
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Thu, 6 Mar 1997 10:22:36 +0100
+
+site-lisp (0.2-8) local; urgency=low
+
+  * ajout de granny 1.11
+  * which-function 1.4
+  * file-log 1.7
+  * cvs 1.19
+  * (40scheme-prog.el): ajout support imenu, 
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Mon, 3 Mar 1997 07:55:44 +0100
+
+site-lisp (0.2-7) local; urgency=low
+
+  * suppression de all.el (doublon avec occur).
+  * description des bindings dans /usr/doc/site-lisp/README.debian
+  * mises à jour mineures de divers fichiers de config.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Wed, 19 Feb 1997 15:03:21 +0100
+
+site-lisp (0.2-6) local; urgency=low
+
+  * (00base.el): suppression d'electric-accents (remplacer par iso-accent).
+  * (00base.el): utilisation de save-place.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Tue, 18 Feb 1997 16:21:46 +0100
+
+site-lisp (0.2-5) local; urgency=low
+
+  * eldoc 1.9
+  * flashparen 1.8
+  * comment 1.4
+  * ssh 1.2
+  * (40scheme-prog.el) : ajout du support scheme pour word-help.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Wed, 12 Feb 1997 15:42:52 +0100
+
+site-lisp (0.2-4) local; urgency=low
+
+  * font-lock qui differencie warning/error pour le mode compilation.
+  * igrep 2.56
+  * background
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Wed, 12 Feb 1997 15:00:56 +0100
+
+site-lisp (0.2-3) local; urgency=low
+
+  * compilation de tous les contrib à chaque fois pour gagner
+  de la place dans le source.
+  * aucun fichier de configuration n'était protégé!!!
+  * igrep 2.55
+  * installation en mode 444 des fichiers lisp.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Sun, 9 Feb 1997 22:50:43 +0100
+
+site-lisp (0.2-2) local; urgency=low
+
+  * suppression de l'appel à gnus-setup.
+  * file-log 1.4
+  * cvs 1.18
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Thu, 6 Feb 1997 09:04:28 +0100
+
+site-lisp (0.2-1) local; urgency=low
+
+  * eldoc 1.8
+  * iso-sgml 1.4
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Tue, 4 Feb 1997 11:30:42 +0100
+
+site-lisp (0.1-1) local; urgency=low
+
+  * Initial Release.
+
+ -- Frederic Lepied <Frederic.Lepied@sugix.frmug.org>  Fri, 31 Jan 1997 10:41:42 +0100
+
+Local variables:
+mode: debian-changelog
+add-log-mailing-address: "Frederic.Lepied@sugix.frmug.org"
+End:

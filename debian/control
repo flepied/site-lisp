@@ -1,0 +1,12 @@
+Source: site-lisp
+Section: editor
+Priority: extra
+Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
+Standards-Version: 2.4.0.0
+
+Package: site-lisp
+Architecture: all
+Depends: emacsen
+Suggests: a2ps
+Replaces: python-elisp
+Description: Fred's emacs configuration and misc emacs utilities.
