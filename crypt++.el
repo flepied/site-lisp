@@ -1,16 +1,16 @@
 ;;; crypt++.el -- code for handling all sorts of compressed and encrypted files
-;;; (also installed as crypt.el)
+;;; (may also be installed as crypt.el)
 
 ;; Authors: Lawrence R. Dodd <dodd@roebling.poly.edu>
 ;;	Rod Whitby <rwhitby@research.canon.oz.au>
 ;;	Kyle E. Jones <kyle@uunet.uu.net>
 ;; Maintainer: <karl@cs.umb.edu>
 ;; Created: crypt.el in 1988, crypt++.el on 18 Jan 1993.
-;; Version: 2.87
+;; Version: 2.88
 ;; Keywords: extensions
-;; $Id: crypt++.el,v 1.17 1999/04/21 15:14:36 karl Exp $
+;; $Id: crypt++.el,v 1.18 2000/06/02 16:27:55 karl Exp $
 
-;;; Copyright (C) 1998, 99 Free Software Foundation, Inc.
+;;; Copyright (C) 1998, 99, 2000 Free Software Foundation, Inc.
 ;;; Copyright (C) 1994 Lawrence R. Dodd
 ;;; Copyright (C) 1993 Lawrence R. Dodd and Rod Whitby
 ;;; Copyright (C) 1988, 1989, 1990 Kyle E. Jones
@@ -34,9 +34,9 @@
 ;;; Please see notes on INSTALLATION and USAGE on the pages below.
 
 ;;; LCD Archive Entry:
-;;; crypt++|Rod Whitby and Lawrence R. Dodd|karl@cs.umb.edu|
+;;; crypt++|Rod Whitby and Lawrence R. Dodd|karl@gnu.org|
 ;;; Handle compressed and encrypted files.|
-;;; 1999-04-21|2.87|~/misc/crypt++.el.Z|
+;;; 1999-06-02|2.88|~/misc/crypt++.el.Z|
 
 ;;; AVAILABLE:
 ;;; ftp://ftp.cs.umb.edu/pub/misc/crypt++.el
@@ -764,6 +764,10 @@
 ;;;    of inserting into the current buffer.
 ;;; 2.87 - 21apr99
 ;;;    add crypt-decode-{dos,mac}-p.
+;;; 2.88 - 2jun00
+;;;    kifer@cs.sunysb.edu: (coding-system-for-write 'no-conversion)
+;;;    ryk@coho.net: (buffer-file-coding-system 'no-conversion)
+;;;    johnh@isi.edu: mailcrypt & pgp/pgp5.0/gpg.
 
 
 ;;; Code:
@@ -904,6 +908,17 @@ absence of `crypt-encryption-magic-regexp-inverse'.")
          t
          )
    ;; Add new elements here ...
+   ;; GPG
+   (list 'gpg
+         crypt-encryption-magic-regexp crypt-encryption-magic-regexp-inverse
+         (or crypt-encryption-file-extension "\\(\\.gpg\\)$")
+         "gpg" "gpg"
+         '("-c" "-z3" "-o-")
+         '("-d")
+         "GPG"
+         nil
+         t
+         )
    ))
 
 (defconst crypt-encryption-alist (crypt-build-encryption-alist)
@@ -1840,8 +1855,11 @@ Derived from variable `crypt-encoding-alist' and function
 (defvar crypt-pgp-pub-library 'mailcrypt
   "What PGP library to use.
 Bind to 'npgp to use \"PEM - PGP Enhanced Messaging for GNU Emacs\"
-from Roy Frederick Busdiecker, III (Rick).")
+from Roy Frederick Busdiecker, III (Rick)
+or to 'mailcrypt (see also crypt-pgp-pub-sub-library).")
 
+(defvar crypt-pgp-pub-sub-library 'pgp50
+  "What variant of mailcrypt 3.5.x to use 'pgp, 'pgp50, 'gpg.")
 
 (defvar crypt-pgp-pub-npgp-userid nil
   "PGP key for the current user.")
@@ -1881,14 +1899,43 @@ Should have a leading 0x.")
 (defun crypt-pgp-pub-mailcrypt-userid ()
   "Do the right thing."
   (require 'mailcrypt)
-  (car (mc-pgp-lookup-key mc-pgp-user-id)))
+  (cond
+   ((eq crypt-pgp-pub-sub-library 'pgp)
+    (car (mc-pgp-lookup-key mc-pgp-user-id)))
+   ((eq crypt-pgp-pub-sub-library 'pgp50)
+    (car (mc-pgp50-lookup-key mc-pgp50-user-id)))
+   ((eq crypt-pgp-pub-sub-library 'gpg)
+    (car (mc-gpg-lookup-key mc-gpg-user-id)))
+   (t (error "crypt-pgp-pub-mailcrypt-userid: no pgp sub-library."))))
+
+  
+(defun crypt-pgp-pub-load-mailcrypt ()
+  (require 'mailcrypt)
+  ;; ick ick ick this code needs to be cleaned up
+  (cond
+   ((null (eq crypt-pgp-pub-library 'mailcrypt))
+    t)
+   ((eq crypt-pgp-pub-sub-library 'pgp)
+    (load-library "mc-pgp"))
+   ((eq crypt-pgp-pub-sub-library 'pgp50)
+    (load-library "mc-pgp5"))
+   ((eq crypt-pgp-pub-sub-library 'gpg)
+    (load-library "mc-gpg"))
+   (t (error "crypt-pgp-pub-load-mailcrypt: no pgp sub-library."))))
 
 (defun crypt-pgp-pub-decrypt-region (start end)
   (cond
    ((eq crypt-pgp-pub-library 'npgp) (npgp:decrypt-region start end))
    ((eq crypt-pgp-pub-library 'mailcrypt)
-    (require 'mailcrypt)
-    (mc-pgp-decrypt-region start end))
+    (crypt-pgp-pub-load-mailcrypt)
+    (cond
+     ((eq crypt-pgp-pub-sub-library 'pgp)
+      (mc-pgp-decrypt-region start end))
+     ((eq crypt-pgp-pub-sub-library 'pgp50)
+      (mc-pgp50-decrypt-region start end))
+     ((eq crypt-pgp-pub-sub-library 'gpg)
+      (mc-gpg-decrypt-region start end))
+     (t (error "crypt-pgp-pub-decrypt-region: no pgp sub-library."))))
    (t (error "crypt-pgp-pub-decrypt-region: no pgp library."))))
 
 (defun crypt-pgp-pub-encrypt-region (start end)
@@ -1896,11 +1943,9 @@ Should have a leading 0x.")
    ((eq crypt-pgp-pub-library 'npgp)
     (npgp:encrypt-region (crypt-pgp-pub-npgp-userid) start end))
    ((eq crypt-pgp-pub-library 'mailcrypt)
-    (require 'mailcrypt)
+    (crypt-pgp-pub-load-mailcrypt)
     (let ((old-sign mc-pgp-always-sign)
-	  (old-comment mc-pgp-comment))
-      (setq mc-pgp-always-sign 'never
-	    mc-pgp-comment nil)
+	  old-comment recipients)
       (if crypt-pgp-pub-multirecipients
 	  (if (eq (length crypt-pgp-pub-recipients) 0)
 	      (progn
@@ -1916,11 +1961,29 @@ Should have a leading 0x.")
 			      (read-string
 			       "Recipients: " nil crypt-pgp-pub-recipient-history)))))
 	(setq crypt-pgp-pub-recipients (crypt-pgp-pub-mailcrypt-userid)))
-      (mc-pgp-encrypt-region (mc-split "\\([ \t\n]*,[ \t\n]*\\)+" crypt-pgp-pub-recipients)
-			     start end
-			     (crypt-pgp-pub-mailcrypt-userid) nil)
-      (setq mc-pgp-always-sign old-sign
-	    mc-pgp-comment old-comment)))
+      (setq mc-pgp-always-sign 'never
+	    recipients (mc-split "\\([ \t\n]*,[ \t\n]*\\)+" crypt-pgp-pub-recipients))
+      (cond
+       ((eq crypt-pgp-pub-sub-library 'pgp)
+	(setq old-comment mc-pgp-comment
+	      mc-pgp-comment nil)
+	(mc-pgp-encrypt-region recipients start end
+			       (crypt-pgp-pub-mailcrypt-userid) nil)
+	(setq mc-pgp-comment old-comment))
+       ((eq crypt-pgp-pub-sub-library 'pgp50)
+	(setq old-comment mc-pgp50-comment
+	      mc-pgp50-comment nil)
+	(mc-pgp50-encrypt-region recipients start end
+			       (crypt-pgp-pub-mailcrypt-userid) nil)
+	(setq mc-pgp50-comment old-comment))
+       ((eq crypt-pgp-pub-sub-library 'pgp)
+	(setq old-comment mc-gpg-comment
+	      mc-gpg-comment nil)
+	(mc-pgp-encrypt-region recipients start end
+			       (crypt-pgp-pub-mailcrypt-userid) nil)
+	(setq mc-gpg-comment old-comment))
+       (t (error "crypt-pgp-pub-decrypt-region: no pgp sub-library.")))
+      (setq mc-pgp-always-sign old-sign)))
    (t (error "crypt-pgp-pub-decrypt-region: no pgp library."))))
 
 (defun crypt-encrypt-region (start end key &optional decrypt)
@@ -1956,7 +2019,8 @@ decryption is done."
    ;; Sun Microsystems, HPUX-8, and BSD) if `args' is `"".'  This will allow
    ;; nil values and lists of strings for argument.
 
-   (let (prog args)
+   (let ((coding-system-for-write 'no-conversion)
+	 prog args)
 
      ;; Get the proper program and arguments.
      (if decrypt
@@ -2213,6 +2277,8 @@ encrypted."
           ;; If the key is not set then ask for it.
           (if (not crypt-buffer-encryption-key)
               (call-interactively 'crypt-set-encryption-key))
+          ;; Encrypted files should not be converted.
+          (setq buffer-file-coding-system 'no-conversion)
           ;; Turn-off auto-saving if crypt-encrypted-disable-auto-save non-nil.
           (and crypt-encrypted-disable-auto-save
                auto-save-default
@@ -2659,7 +2725,7 @@ see variable `crypt-auto-decode-insert'."
 ;;; This section is provided for reports.
 ;;; Using Barry A. Warsaw's reporter.el
 
-(defconst crypt-version "2.87"
+(defconst crypt-version "2.88"
   "Revision number of crypt++.el -- handles compressed and encrypted files.
 Type \\[crypt-submit-report] to send a bug report.  Available via anonymous
 ftp at ftp://ftp.cs.umb.edu/pub/misc/crypt++.el")
