@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: rpm.el,v 1.1 1999-12-09 07:34:42 flepied Exp $
+;; Version: $Id: rpm.el,v 1.2 2000-08-24 12:45:40 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -26,5 +26,10 @@
 
 (setq auto-mode-alist (append '(("\\.spec" . rpm-spec-mode))
 			      auto-mode-alist))
+
+(defvar ffap-spec-path '("../SOURCES"))
+(defun ffap-spec (name) (ffap-locate-file name t ffap-spec-path))
+(require 'ffap)
+(add-to-list 'ffap-alist (cons 'rpm-spec-mode 'ffap-spec))
 
 ;;; rpm.el ends here
