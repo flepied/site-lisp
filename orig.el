@@ -57,10 +57,15 @@
   "*Regex to test if a backup of a file has to be created with `orig-save'.
 If nil no backup is created.")
 
+(defvar orig-use-truename nil
+  "*if non nil, use the real name of the file (follow symlink)")
+
 (defun orig-save()
   "Save a file in a backup with `orig-ext' appended if the file name
 matches `orig-save-regex' and no backup already exists."
-  (let ((real-name (file-truename buffer-file-name)))
+  (let ((real-name (or (and orig-use-truename
+			    (file-truename buffer-file-name))
+		       buffer-file-name)))
     (if (and orig-save-regex
 	     (string-match orig-save-regex real-name))
 	(let ((orig (concat real-name orig-ext)))
