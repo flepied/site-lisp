@@ -4,9 +4,11 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: color.el,v 1.2 2000-01-05 08:50:50 flepied Exp $
+;; Version: $Id: color.el,v 1.3 2001-10-22 16:06:10 flepied Exp $
 ;; Keywords: 
 ;;
+
+(cfg-require 'base)
 
 ;;=============================================================================
 ;; Autoloaded section.
@@ -154,7 +156,7 @@ Turn off blank visualization." t nil)
 ;;=============================================================================
 ;; Coloriage suivant le mode par font-lock.
 ;;=============================================================================
-(if (or window-system is-xemacs)
+(if (or window-system is-xemacs (>= emacs-major-version 21))
     (progn
       (setq font-lock-support-mode 'lazy-lock-mode)
       (if (fboundp 'global-font-lock-mode)
