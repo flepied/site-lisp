@@ -980,7 +980,7 @@ command."
 	    "\n\n\n%clean\nrm -rf $RPM_BUILD_ROOT"
 	    "\n\n%files\n%defattr(-,root,root)\n" 
 	    "\n\n%changelog\n"
-	    "\n# end of file\n")
+	    "\n# " file-name-nondirectory " ends here\n")
     (rpm-add-change-log-entry "First spec file for Mandrake distribution.\n"))
   )
 

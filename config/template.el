@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: template.el,v 1.2 1999-12-09 09:28:47 flepied Exp $
+;; Version: $Id: template.el,v 1.3 2000-06-06 08:12:07 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -36,6 +36,7 @@
 	("[0-9][0-9].*\\.el$" . "config.el")
 	("\\.py$"       . "temp.py")
 	("local.rules"  . "local.rules")
+	("\\.spec$"     . "temp.spec")
 	))
 
 (setq dc-auto-insert-mode-alist

@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: web.el,v 1.1 1999-12-09 07:34:42 flepied Exp $
+;; Version: $Id: web.el,v 1.2 2000-06-06 08:12:07 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -22,6 +22,21 @@ This function will open a connection and download the latest headlines from the
 slashdot.org, \"News for Nerds\" website, and display them.  This will also
 place clickable links to allow you to read the articles with either `w3', or
 and external browser." t nil)
+
+;;;***
+
+;;;### (autoloads (watson-version watson-referers watson) "watson" "../watson.el" (14431 10595))
+;;; Generated autoloads from ../watson.el
+
+(autoload (quote watson) "watson" "\
+Lookup a word or phrase on various search engines." t nil)
+
+(autoload (quote watson-referers) "watson" "\
+List web pages which link to URL" t nil)
+
+(autoload (quote watson-version) "watson" "\
+Show the version number of watson in the minibuffer.
+If optional argument HERE is non-nil, insert version number at point." t nil)
 
 ;;;***
 

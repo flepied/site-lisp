@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: gnus.el,v 1.1 1999-12-09 07:34:42 flepied Exp $
+;; Version: $Id: gnus.el,v 1.2 2000-06-06 08:12:07 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -45,9 +45,11 @@
   x-attribution)
 
 ;; Sauvegarde dans un fichier
-(setq message-default-headers
-      "FCC: ~/saved-post
-")
+(setq gnus-message-archive-group '((if (message-news-p)
+				       "misc-news"
+				     (concat "mail.sent." (format-time-string
+							   "%Y-%m" (current-time))))))
+
 (setq news-reply-header-hook nil)
 (setq sc-auto-fill-region-p nil)	; pour ne pas remplir les paragraphes
 
