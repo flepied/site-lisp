@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: base.el,v 1.1 1999-12-09 07:34:42 flepied Exp $
+;; Version: $Id: base.el,v 1.2 2000-01-06 08:00:34 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -83,6 +83,17 @@ Upon exit from recursive edit, restore restrictions, point and mark." t nil)
 
 ;;;***
 
+
+(defun global-change-directory (from to)
+  "Change directory of all buffers with default-directory FROM to TO."
+  (interactive "DGlobally change directory from: \nDTo: ")
+  (let ((bufs (buffer-list))
+	(from (expand-file-name from)))
+    (while bufs
+      (with-current-buffer (car bufs)
+	(when (equal from (expand-file-name default-directory))
+	  (setq default-directory to)))
+      (setq bufs (cdr bufs)))))
 
 ;;=============================================================================
 ;; Configuration section.
