@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: lisp-prog.el,v 1.1 1999-12-09 07:34:42 flepied Exp $
+;; Version: $Id: lisp-prog.el,v 1.2 2004-05-05 06:57:25 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -141,8 +141,8 @@ Optional argument ARG is number of sexps to include in that buffer."
   (foldingo-activation))
 
 (add-hook 'emacs-lisp-mode-hook (function (lambda()
-					    (local-set-key '[f5] 'eval-region)	; F5
-					    (local-set-key '[f6] 'eval-current-buffer)	; F5
+					    (local-set-key '[f5] '(lambda(b e) (interactive "r") (eval-region b e) (message "region evaluated")))	; F5
+					    (local-set-key '[f6] '(lambda() (interactive) (eval-current-buffer) (message "buffer evaluated")))	; F5
 					    (turn-on-eldoc-mode)
 					    (config-lisp-hook))))
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
