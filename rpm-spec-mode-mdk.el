@@ -399,6 +399,7 @@ the package."
 (defvar rpm-spec-font-lock-keywords
   '(
     ("%[a-zA-Z-]+" 0 rpm-spec-macro-face)
+    ("^\\([a-zA-Z0-9]+\\)\\(\([a-zA-Z0-9]+\)\\):" (1 rpm-spec-tag-face)(2 rpm-spec-ghost-face))
     ("^\\([a-zA-Z0-9]+\\):" 1 rpm-spec-tag-face)
     ("%\\(define\\|files\\|package\\|description\\)[ \t]+\\([^ \t\n-]+\\)"
      (2 rpm-spec-package-face))
@@ -410,10 +411,11 @@ the package."
     ("^\\(.+\\)(\\([a-zA-Z]\\{2,2\\}\\)):" 
      (1 rpm-spec-tag-face)
      (2 rpm-spec-doc-face))
-    ("^\\*\\(.\\{16,16\\}\\).\\(.*\\)\\(<.*>\\)\n"
-     (1 rpm-spec-dir-face)
+        ("^\\*\\(.*[0-9] \\)\\(.*\\)\\(<.*>\\)\\(.*\\)\n"
+     (1 rpm-spec-doc-face)
      (2 rpm-spec-package-face)
-     (3 rpm-spec-tag-face))
+     (3 rpm-spec-tag-face)
+     (4 font-lock-warning-face))
     ("%{[a-zA-Z_-]+}" 0 rpm-spec-doc-face)
     )
   "Additional expressions to highlight in RPM Spec mode.")
@@ -497,8 +499,7 @@ with no args, if that value is non-nil."
 (defun rpm-add-change-log-entry (&optional change-log-entry)
   "Find change log and add an entry for today."
   (interactive "p")
-  (save-excursion
-    (goto-char (point-min))
+  (goto-char (point-min))
     (if (search-forward-regexp "^%changelog[ \t]*$" nil t)
 	(let ((string (concat "* " (substring (current-time-string) 0 11)
 			      (substring (current-time-string) -4) " "
@@ -508,13 +509,11 @@ with no args, if that value is non-nil."
 				  "")
 				   )))
 	  (if (not (search-forward string nil t))
-	      (insert "\n" string "\n\n")
-	    (next-line 2)
-	    (beginning-of-line))
-	  (if (eq change-log-entry 1)
-	      (insert "- " (read-from-minibuffer "Changelog entry: ") "\n")
-	    (insert "- " change-log-entry)))
-      (message "No \"%%changelog\" entry found..."))))
+	      (progn (insert "\n" string "\n"))
+	    (next-line 1) (beginning-of-line))
+	  (insert "\n") (previous-line 1)
+	  (insert "- "))
+      (message "No \"%%changelog\" entry found...")))
 
 ;;------------------------------------------------------------
 
@@ -596,7 +595,7 @@ with no args, if that value is non-nil."
 	(let ((release (1+ (string-to-int (match-string 1)))))
 	  (next-line 1)
 	  (beginning-of-line)
-	  (let ((default-directory "/usr/src/redhat/SOURCES/"))
+	  (let ((default-directory "../SOURCES/"))
 	    (insert what (int-to-string release) ": "
 		    (read-file-name (concat what "file: ") "" "" nil) "\n")))
       (goto-char (point-min))
@@ -986,7 +985,7 @@ command."
 	    "\n\n%description\n"
 	    "\n%prep\n%setup\n\n%build\n\n%install\nrm -rf $RPM_BUILD_ROOT"
 	    "\n\n\n%clean\nrm -rf $RPM_BUILD_ROOT"
-	    "\n\n%files\n%defattr(-,root,root,0755)\n" 
+	    "\n\n%files\n%defattr(-,root,root)\n" 
 	    "\n\n%changelog\n"
 	    "\n# end of file\n")
     (rpm-add-change-log-entry "First spec file for Mandrake distribution.\n"))
@@ -999,7 +998,7 @@ command."
 		 (goto-char (point-min))
 		 (search-forward-regexp (concat field ":[ 	]*\\(.+\\).*$") max)
 		 (match-string 1) )))
-      (if (string-match "%{?\\(.*\\)}?" str)
+      (if (string-match "%{?\\([^}]*\\)}?$" str)
 	  (progn
 	    (goto-char (point-min))
 	    (search-forward-regexp (concat "%define[ 	]+" (substring str (match-beginning 1)
