@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: base.el,v 1.3 2001-10-29 00:27:00 flepied Exp $
+;; Version: $Id: base.el,v 1.4 2001-11-09 20:24:46 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -227,7 +227,8 @@ Upon exit from recursive edit, restore restrictions, point and mark." t nil)
 ;;=============================================================================
 (if is-xemacs
     (require 'crypt)
-  (require 'jka-compr))
+  (require 'jka-compr)
+  (setq auto-compression-mode 1))
 
 ;;=============================================================================
 ;; insert a time stamp under cursor
