@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: base.el,v 1.2 2000-01-06 08:00:34 flepied Exp $
+;; Version: $Id: base.el,v 1.3 2001-10-29 00:27:00 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -217,6 +217,10 @@ Upon exit from recursive edit, restore restrictions, point and mark." t nil)
 
 (standard-display-european 1)
 ;(require 'iso-syntax)
+
+; pas de toolbar en emacs 21
+(if (fboundp 'tool-bar-mode)
+    (tool-bar-mode 0))
 
 ;;=============================================================================
 ;; on-the fly (de)compression
