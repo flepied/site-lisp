@@ -4,6 +4,7 @@ Fri, 31 Jan 1997 10:41:42 +0100.
 NAME			VERSION	COPYRIGHT	URL
 
 background		???
+blank-mode		1.O	GPL
 cfg			???	GPL
 codeline		1.1
 cvs			1.31	GPL	http://www.teaser.fr/~flepied/cvs.el.gz
@@ -43,6 +44,7 @@ pdb			1.4		ftp://ftp.aifb.uni-karlsruhe.de/pub/wwe/pdb.el
 python-mode		3.87	GPL	ftp://ftp.python.org/pub/emacs/python-mode.el
 refontify     		???
 rpm-spec-mode-mdk	0.08a	GPL	ftp://ftp.mandrakesoft.com/pub/chmou/
+sh-script		2.1a	GPL	ftp://ftp.emacs.org/pub/elisp/ALL/sh-script.el
 simple-merge-mode	1.5	GPL	
 slashdot		0.0.6	GPL	http://www.tardis.ed.ac.uk/~skx/
 steno			1.1	GPL
@@ -53,6 +55,7 @@ webjump       		1.4		http://www.cs.brown.edu/people/nwv/
 which-function		1.4	GPL	http://www.teaser.fr/~flepied/which-function.el.gz
 word-help		1.23
 xrdb-mode		2.24	GPL	http://www.python.org/emacs/
+
 Copyright:
 
 GPL  stands for  GNU General  Public  License  and is available  under
