@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: mail-news.el,v 1.1 1999-12-09 07:34:42 flepied Exp $
+;; Version: $Id: mail-news.el,v 1.2 2004-06-17 07:00:22 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -23,7 +23,9 @@
 ;;=============================================================================
 (setq bbdb-completion-type 'primary-or-name)
 
-(defvar gnus-summary-print-command "a2ps -g --strip=1 -Email -q"
+(autoload 'newsticker-start "newsticker" "Emacs Newsticker" t)
+
+(defvar gnus-summary-print-command "a2ps -g -d --strip=1 -Email -q"
   "*command used to print an article in Summary mode")
 
 (defun gnus-summary-print ()
@@ -44,5 +46,16 @@
              (define-key
                gnus-summary-mode-map "i" 'gnus-summary-print)))
 
+
+(defun cto ()
+  (interactive)
+  (save-excursion
+    (let (end)
+      (end-of-buffer)
+      (setq end (point))
+      (if (re-search-backward message-signature-separator nil t)
+	  (delete-region (- (point) 1) end)))
+    (let ((message-signature "Frédéric Lepied - Mandrakesoft CTO"))
+      (message-insert-signature))))
 
 ;;; 65mail-news.el ends here
