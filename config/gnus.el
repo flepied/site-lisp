@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: gnus.el,v 1.3 2001-10-22 16:12:49 flepied Exp $
+;; Version: $Id: gnus.el,v 1.4 2003-08-19 05:01:50 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -72,7 +72,8 @@
       gnus-auto-select-first nil
       gnus-large-newsgroup ""
 
-      gnus-thread-hide-subtree t)
+;      gnus-thread-hide-subtree t
+      )
 
 ;; Groupes de mail toujours visibles
 (setq gnus-permanently-visible-groups "^nnml:")
@@ -86,5 +87,7 @@
 	     (add-hook 'gnus-article-display-hook 'gnus-article-date-local)
 	     (add-hook 'gnus-article-display-hook 'gnus-article-hide-pgp)
 	     )))
+
+(add-hook 'gnus-summary-prepared-hook (function end-of-buffer))
 
 ;;; 70gnus.el ends here
