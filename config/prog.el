@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: prog.el,v 1.2 2001-10-22 16:13:20 flepied Exp $
+;; Version: $Id: prog.el,v 1.3 2004-01-19 07:32:38 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -286,6 +286,8 @@ default suggestion will be presented. " t nil)
 
 (require 'cvs)
 (define-key cvs:map "\C-cva" 'granny)
+;; cvs -l update do no loger work
+(setq cvs-no-log-option nil)
 
 (require 'file-log)
 (define-key ctl-x-map "l" 'flog-add-entry)
