@@ -298,6 +298,7 @@ the package."
   (define-key rpm-spec-mode-map "\C-c\C-r" 'rpm-spec-increase-release-tag-2)
   (define-key rpm-spec-mode-map "\C-cr" 'rpm-spec-increase-release-tag)
   (define-key rpm-spec-mode-map "\C-ce" 'rpm-add-change-log-entry)
+  (define-key rpm-spec-mode-map "\C-cs" 'rpm-toggle-short-circuit)
   ;;May be better to have movement commands on \C-ck, and build on \C-c\C-k
   (define-key rpm-spec-mode-map "\C-c\C-e" 'rpm-insert-tag)
   (define-key rpm-spec-mode-map "\C-c\C-n" 'rpm-forward-section)
@@ -867,18 +868,14 @@ leave point at previous location."
 (defun rpm-build-bp (&optional arg)
   "Run a `rpm -bp'."
   (interactive "p")
-  (if rpm-spec-short-circuit
-      (message "Cannot run `rpm -bp' with short-circuit")
-    (setq rpm-no-pgp t)
-    (rpm-build "-bp")))
+  (setq rpm-no-pgp t)
+  (rpm-build "-bp"))
 
 (defun rpm-build-bl (&optional arg)
   "Run a `rpm -bl'."
   (interactive "p")
-  (if rpm-spec-short-circuit
-      (message "Cannot run `rpm -bl' with short-circuit")
-    (setq rpm-no-pgp t)
-    (rpm-build "-bl")))
+  (setq rpm-no-pgp t)
+  (rpm-build "-bl"))
 
 (defun rpm-build-bc (&optional arg)
   "Run a `rpm -bc'."
@@ -895,18 +892,14 @@ leave point at previous location."
 (defun rpm-build-bb (&optional arg)
   "Run a `rpm -ba'."
   (interactive "p")
-  (if rpm-spec-short-circuit
-      (message "Cannot run `rpm -bb' with short-circuit")
-    (setq rpm-no-pgp nil)
-    (rpm-build "-bb")))
+  (setq rpm-no-pgp nil)
+  (rpm-build "-bb"))
 
 (defun rpm-build-ba (&optional arg)
   "Run a `rpm -ba'."
   (interactive "p")
-  (if rpm-spec-short-circuit
-      (message "Cannot run `rpm -ba' with short-circuit")
-    (setq rpm-no-pgp nil)
-    (rpm-build "-ba")))
+  (setq rpm-no-pgp nil)
+  (rpm-build "-ba"))
 
 (defun rpm-process-check (buffer)
   "Check if BUFFER has a running process.
@@ -1014,6 +1007,12 @@ command."
 	   (version (rpm-spec-field-value "Version" max))
 	   (release (rpm-spec-field-value "Release" max)) )
       (concat version "-" release))))
+
+(defun rpm-toggle-short-circuit ()
+  (interactive)
+  (setq rpm-spec-short-circuit
+	(not rpm-spec-short-circuit))
+  (message "short-ciruit is %s" (if rpm-spec-short-circuit "on" "off")) )
 
 ;;------------------------------------------------------------
 
