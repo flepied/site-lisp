@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: color.el,v 1.1 1999-12-09 07:34:42 flepied Exp $
+;; Version: $Id: color.el,v 1.2 2000-01-05 08:50:50 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -22,6 +22,27 @@ prefix argument if that is specified.
 
 
 ;;;###
+
+;;;***
+
+;;;### (autoloads (blank-mode-off blank-mode-on blank-mode blank-mode-customize) "blank-mode" "../blank-mode.el" (14451 466))
+;;; Generated autoloads from ../blank-mode.el
+
+(autoload (quote blank-mode-customize) "blank-mode" "\
+Customize blank-mode options." t nil)
+
+(autoload (quote blank-mode) "blank-mode" "\
+Toggle blank visualization.
+
+If ARG is null, toggle blank visualization.
+If ARG is a number and is greater than zero, turn on visualization; otherwise,
+turn off visualization." t nil)
+
+(autoload (quote blank-mode-on) "blank-mode" "\
+Turn on blank visualization." t nil)
+
+(autoload (quote blank-mode-off) "blank-mode" "\
+Turn off blank visualization." t nil)
 
 ;;;***
 
