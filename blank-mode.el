@@ -5,25 +5,24 @@
 ;; Author:     Vinicius Jose Latorre <vinicius@cpqd.com.br>
 ;; Maintainer: Vinicius Jose Latorre <vinicius@cpqd.com.br>
 ;; Keywords:   data, wp
-;; Time-stamp: <2000/01/03 12:33:51 vinicius>
-;; Version:    1.0
+;; Time-stamp: <2000/07/09 14:57:21 vinicius>
+;; Version:    2.0
 
 ;; This file is *NOT* (yet?) part of GNU Emacs.
 
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 2, or (at your option)
-;; any later version.
+;; This program is free software; you can redistribute it and/or modify it
+;; under the terms of the GNU General Public License as published by the Free
+;; Software Foundation; either version 2, or (at your option) any later
+;; version.
 
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
+;; This program is distributed in the hope that it will be useful, but WITHOUT
+;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+;; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+;; more details.
 
-;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs; see the file COPYING.  If not, write to the
-;; Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-;; Boston, MA 02111-1307, USA.
+;; You should have received a copy of the GNU General Public License along with
+;; GNU Emacs; see the file COPYING.  If not, write to the Free Software
+;; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 ;;; Commentary:
 
@@ -56,11 +55,11 @@
 ;; This will generate blank-mode.elc, which will be loaded instead of
 ;; blank-mode.el.
 ;;
-;; blank-mode was tested with GNU Emacs 20.4.1.
+;; blank-mode was tested with GNU Emacs 20.6.1.
 ;;
 ;;
 ;; Using blank-mode
-;; -----------
+;; ----------------
 ;;
 ;; To activate blank-mode, type:
 ;;
@@ -113,11 +112,17 @@
 ;; Below it's shown a brief description of blank-mode options, please, see the
 ;; options declaration in the code for a long documentation.
 ;;
-;; `blank-space-face'			Face used to visualize SPACE.
+;; `blank-space-face'		Face used to visualize SPACE.
 ;;
-;; `blank-tab-face'			Face used to visualize TAB.
+;; `blank-tab-face'		Face used to visualize TAB.
 ;;
-;; `blank-verbose'			Non-nil means generate messages.
+;; `blank-verbose'		Non-nil means generate messages.
+;;
+;; `blank-chars'		Specify which kind of blank is visualized.
+;;
+;; `blank-space-chars'		Specify space characters.
+;;
+;; `blank-tab-chars'		Specify tab characters.
 ;;
 ;; To set the above options you may:
 ;;
@@ -161,15 +166,31 @@
 ;;    you leave out the current Emacs session.
 ;;
 ;;
-;; Things To Change
+;; Acknowledgements
 ;; ----------------
 ;;
-;; . At moment, nothing.  Any idea?  Send it!
+;; Thanks to Pete Forman <pete.forman@westgeo.com> for indicating
+;; whitespace-mode on XEmacs.
+;;
+;; Thanks to all who emailed comments.
 ;;
 ;;
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; code:
+
+
+;; GNU Emacs
+(or (fboundp 'set-window-redisplay-end-trigger)
+    (defalias 'set-window-redisplay-end-trigger 'ignore))
+
+
+;; XEmacs needs overlay emulation package
+(eval-and-compile
+  (and (let (case-fold-search)
+	 (string-match "XEmacs\\|Lucid\\|Epoch" emacs-version))
+       (not (require 'overlay nil 'noerr))
+       (error "`blank-mode' requires `overlay' package.")))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -211,6 +232,50 @@
   :type 'boolean
   :group 'blank)
 
+
+(defcustom blank-chars 'tabs-and-spaces
+  "*Specify which kind of blank is visualized.
+
+Valid values are:
+
+   'tabs-and-spaces     TABs and SPACEs are visualized.
+   'tabs                only TABs are visualized.
+   'spaces              only SPACEs are visualized.
+
+Any other value is treated as `tabs-and-spaces'."
+  :type '(radio :tag "Kind of Blank"
+		(const tabs-and-spaces)
+		(const tabs)
+		(const spaces))
+  :group 'blank)
+
+
+(defcustom blank-space-chars " "
+  "*Specify space characters.
+
+If you're using `mule' package, it may exists other characters besides \" \"
+that it should be considered space."
+  :type '(string :tag "Space Chars")
+  :group 'blank)
+
+
+(defcustom blank-tab-chars "\t"
+  "*Specify tab characters.
+
+If you're using `mule' package, it may exists other characters besides \"\\t\"
+that it should be considered tab."
+  :type '(string :tag "Tab Chars")
+  :group 'blank)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Macros I
+
+
+(defmacro blank-message (&rest body)
+  (` (and blank-verbose (interactive-p)
+	  (message (,@ body)))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Customization
@@ -231,6 +296,10 @@
 (make-variable-buffer-local 'blank-mode)
 
 
+(defvar blank-skip-chars nil)
+(make-variable-buffer-local 'blank-skip-chars)
+
+
 ;;;###autoload
 (defun blank-mode (&optional arg)
   "Toggle blank visualization.
@@ -239,21 +308,12 @@ If ARG is null, toggle blank visualization.
 If ARG is a number and is greater than zero, turn on visualization; otherwise,
 turn off visualization."
   (interactive "P")
-  (cond
-   ;; nil ==> toggle blank visualization
-   ((null arg)
-    (if blank-mode
-	(blank-mode-off)
-      (blank-mode-on)))
-   ;; number > 0 ==> turn on
-   ((> (prefix-numeric-value arg) 0)
-    (blank-mode-on))
-   ;; otherwise ==> turn off
-   (t
+  (if (if arg
+	  (> (prefix-numeric-value arg) 0)
+	(not blank-mode))
+      (blank-mode-on)
     (blank-mode-off))
-   )
-  (and blank-verbose (interactive-p)
-       (message "Blank Mode is now %s." (if blank-mode "on" "off"))))
+  (blank-message "Blank Mode is now %s." (if blank-mode "on" "off")))
 
 
 ;;;###autoload
@@ -261,24 +321,21 @@ turn off visualization."
   "Turn on blank visualization."
   (interactive)
   (or (and (boundp 'blank-mode) blank-mode)
-      (let ((inhibit-point-motion-hooks t)
-	    (font-lock-on (and (boundp 'font-lock-mode) font-lock-mode)))
-	(and font-lock-on
-	     (remove-hook 'after-change-functions
-			  'font-lock-after-change-function t))
+      (let ((inhibit-point-motion-hooks t))
+	(setq blank-mode t
+	      blank-skip-chars
+	      (concat "^"
+		      (cond ((eq blank-chars 'tabs)   blank-tab-chars)
+			    ((eq blank-chars 'spaces) blank-space-chars)
+			    (t (concat blank-space-chars blank-tab-chars)))))
 	(blank-after-scroll-on (selected-window) (window-start))
 	(run-hooks 'blank-mode-hook)
-	(and font-lock-on
-	     (add-hook 'after-change-functions
-		       'font-lock-after-change-function nil t))
 	(make-local-hook 'after-change-functions)
 	(add-hook 'after-change-functions 'blank-after-change-function t t)
 	(make-local-hook 'window-scroll-functions)
 	(remove-hook 'window-scroll-functions 'blank-after-scroll-off t)
 	(add-hook 'window-scroll-functions 'blank-after-scroll-on t t)
-	(setq blank-mode t)
-	(and blank-verbose (interactive-p)
-	     (message "Blank Mode is now on.")))))
+	(blank-message "Blank Mode is now on."))))
 
 
 ;;;###autoload
@@ -287,23 +344,23 @@ turn off visualization."
   (interactive)
   (and (boundp 'blank-mode) blank-mode
        (let ((inhibit-point-motion-hooks t))
+	 (setq blank-mode nil)
 	 (remove-hook 'after-change-functions 'blank-after-change-function t)
 	 (remove-hook 'window-scroll-functions 'blank-after-scroll-on t)
 	 (add-hook 'window-scroll-functions 'blank-after-scroll-off t t)
 	 (blank-after-scroll-off (selected-window) (window-start))
-	 (setq blank-mode nil)
-	 (and blank-verbose (interactive-p)
-	      (message "Blank Mode is now off.")))))
+	 (blank-message "Blank Mode is now off."))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Macros (adapted from lazy-lock.el)
+;; Macros II (adapted from lazy-lock.el)
 
 
 ;; This is to preserve/protect things when modifying text properties.
 (defmacro blank-save-buffer-state (&rest body)
   "Eval BODY restoring buffer state."
-  (` (save-excursion
+  `(save-excursion
+     (save-restriction
        (save-match-data
 	 (let ((modified (buffer-modified-p))
 	       (buffer-undo-list t)
@@ -313,8 +370,10 @@ turn off visualization."
 	       after-change-functions
 	       deactivate-mark
 	       buffer-file-name
-	       buffer-file-truename)
-	   (,@ body)
+	       buffer-file-truename
+	       inhibit-quit)
+	   (widen)
+	   ,@body
 	   (set-buffer-modified-p modified))))))
 
 (put 'blank-save-buffer-state 'lisp-indent-function 0)
@@ -336,15 +395,16 @@ turn off visualization."
 	(remove-hook 'window-scroll-functions 'blank-after-scroll-on t))
        ))
     ;; A prior deletion that did not cause scrolling, followed by a scroll,
-    ;; would result in an unnecessary trigger after this if we did not cancel it
-    ;; now.
+    ;; would result in an unnecessary trigger after this if we did not cancel
+    ;; it now.
     (set-window-redisplay-end-trigger window nil)))
 
 
 (defun blank-after-scroll-off (window window-start)
   (blank-save-buffer-state
     ;; Called from `window-scroll-functions'.
-    ;; Don't visualize blanks on WINDOW from WINDOW-START following the scroll.
+    ;; Don't visualize blanks on WINDOW from WINDOW-START following the
+    ;; scroll.
     (let ((end (window-end window t)))
       (cond
        ((text-property-any window-start end 'blank-mode t)
@@ -353,8 +413,8 @@ turn off visualization."
 	(remove-hook 'window-scroll-functions 'blank-after-scroll-off t))
        ))
     ;; A prior deletion that did not cause scrolling, followed by a scroll,
-    ;; would result in an unnecessary trigger after this if we did not cancel it
-    ;; now.
+    ;; would result in an unnecessary trigger after this if we did not cancel
+    ;; it now.
     (set-window-redisplay-end-trigger window nil)))
 
 
@@ -362,59 +422,64 @@ turn off visualization."
   ;; Called from `after-change-functions'.
   ;; Visualize blanks from BEG to END.
   (blank-save-buffer-state
-   ;; Rescan between start of lines enclosing the region.
-   (let ((the-beg (progn
-		    (goto-char beg)
-		    (beginning-of-line)
-		    (point)))
-	 (the-end (progn
-		    (goto-char end)
-		    (forward-line 1)
-		    (point))))
-     (and (text-property-not-all the-beg the-end 'blank-mode t)
-	  (blank-add-prop the-beg the-end)))))
+    ;; Rescan between start of lines enclosing the region.
+    (goto-char beg)
+    (beginning-of-line)
+    (setq beg (point))
+    (goto-char end)
+    (forward-line 1)
+    (blank-add-prop beg (point))))
 
 
 (defun blank-add-prop (beg end)
   (goto-char beg)
-  (let ((font-lock-on (and (boundp 'font-lock-mode) font-lock-mode))
-	match face)
-    (when font-lock-on
-      (setq font-lock-mode nil)
-      (font-lock-turn-off-thing-lock))
-    (while (< (point) end)
-      (skip-chars-forward "^ \t" end)
-      (and (setq face (cond ((= (following-char) ?\ )
-			     (setq match " ")
-			     blank-space-face)
-			    ((= (following-char) ?\t)
-			     (setq match "\t")
-			     blank-tab-face)
-			    (t
-			     nil)
-			    ))
-	   (add-text-properties (point)
-				(progn
-				  (skip-chars-forward match end)
-				  (point))
-				(list 'face face))))
-    (add-text-properties beg end '(blank-mode t))
-    (when font-lock-on
-      (setq font-lock-mode t)
-      (font-lock-turn-on-thing-lock))))
+  (let (match face)
+    (while (progn
+	     (skip-chars-forward blank-skip-chars end)
+	     (< (point) end))
+      (and (let ((char (char-to-string (following-char))))
+	     (setq face (cond ((string-match char blank-space-chars)
+			       (setq match blank-space-chars)
+			       blank-space-face)
+			      ((string-match char blank-tab-chars)
+			       (setq match blank-tab-chars)
+			       blank-tab-face)
+			      (t
+			       nil)
+			      )))
+	   (let ((the-beg (point))
+		 (the-end (progn
+			    (skip-chars-forward match end)
+			    (point)))
+		 overlay)
+	     (let ((overlays (overlays-in the-beg the-end)))
+	       (while overlays
+		 (let ((ov (car overlays)))
+		   (and (overlay-get ov 'blank-mode)
+			(let ((oface (overlay-get ov 'face)))
+			  (cond ((eq oface face)
+				 (setq overlay  ov
+				       overlays nil))
+				((eq oface blank-space-face))
+				((eq oface blank-tab-face))
+				(t
+				 (delete-overlay ov))))))
+		 (setq overlays (cdr overlays))))
+	     (if overlay
+		 (move-overlay overlay the-beg the-end)
+	       (setq overlay (make-overlay the-beg the-end))
+	       (overlay-put overlay 'face face)
+	       (overlay-put overlay 'blank-mode t)))))
+    (add-text-properties beg end '(blank-mode t))))
 
 
 (defun blank-remove-prop (beg end)
-  (let ((face '(face nil)))
-    (goto-char beg)
-    (while (< (point) end)
-      (skip-chars-forward "^ \t" end)
-      (remove-text-properties (point)
-			      (progn
-				(skip-chars-forward " \t" end)
-				(point))
-			      face))
-    (remove-text-properties beg end '(blank-mode nil))))
+  (let ((overlays (overlays-in beg end)))
+    (while overlays
+      (and (overlay-get (car overlays) 'blank-mode)
+	   (delete-overlay (car overlays)))
+      (setq overlays (cdr overlays))))
+  (remove-text-properties beg end '(blank-mode nil)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
