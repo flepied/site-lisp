@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: dired.el,v 1.1 1999-12-09 07:34:42 flepied Exp $
+;; Version: $Id: dired.el,v 1.2 2001-10-24 17:38:08 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -80,8 +80,5 @@ in either window to kill both buffers and return to the dired buffer. See deb-vi
 	 (setq ad-return-value (locate-get-filename)))
 	(t
 	 ad-do-it)))
-
-;; Support date in french.
-(setq dired-move-to-filename-regexp "\\(Jan\\|janv\\|Feb\\|fév\\|Mar\\|mar\\|Apr\\|avr\\|May\\|mai\\|Jun\\|juin\\|Jul\\|juil\\|Aug\\|août\\|Sep\\|sep\\|Oct\\|oct\\|Nov\\|nov\\|Dec\\|déc\\)[ ]+[0-9]+ [ 0-9][0-9][:0-9][0-9][ 0-9] ")
 
 ;;; 20dired.el ends here
