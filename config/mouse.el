@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: mouse.el,v 1.1 1999-12-09 07:34:42 flepied Exp $
+;; Version: $Id: mouse.el,v 1.2 2003-07-04 13:20:02 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -61,5 +61,8 @@ To test this function, evaluate:
 (global-set-key [M-down-mouse-1] 'pasting-mouse-drag-secondary)
 (global-set-key [M-S-down-mouse-1] 'moving-mouse-drag-secondary)
 (global-set-key [down-mouse-2] 'mouse-drag-throw)
+
+(global-set-key [mouse-4] 'scroll-up)
+(global-set-key [mouse-5] 'scroll-down)
 
 ;;; 10mouse.el ends here
