@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: gnus.el,v 1.2 2000-06-06 08:12:07 flepied Exp $
+;; Version: $Id: gnus.el,v 1.3 2001-10-22 16:12:49 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -34,8 +34,10 @@
 (defun x-face ()
   ""
   x-face)
-      
-(setq x-face (debian-file->string "~/.x-face"))
+
+(and (file-exists-p (expand-file-name "~/.x-face"))
+     (load "vrac")
+     (setq x-face (file->string "~/.x-face")))
 
 (defvar x-attribution nil
   "*Default attribution name to insert in header for newsreader citation scheme")
