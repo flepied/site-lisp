@@ -997,14 +997,14 @@ command."
   (save-excursion
     (let ((str (progn
 		 (goto-char (point-min))
-		 (search-forward-regexp (concat field ": *\\(.+\\).*$") max)
+		 (search-forward-regexp (concat field ":[ 	]*\\(.+\\).*$") max)
 		 (match-string 1) )))
       (if (string-match "%{?\\(.*\\)}?" str)
 	  (progn
 	    (goto-char (point-min))
-	    (search-forward-regexp (concat "%define +" (substring str (match-beginning 1)
+	    (search-forward-regexp (concat "%define[ 	]+" (substring str (match-beginning 1)
 								  (match-end 1) )
-					   " +\\(.*\\)"))
+					   "[ 	]+\\(.*\\)"))
 	    (match-string 1) )
 	str) ) ) )
 
