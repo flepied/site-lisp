@@ -1,16 +1,16 @@
-;;; crypt++.el -- code for handling all sorts of compressed and encrypted files
+;;; crypt++.el -- handle all sorts of compressed and encrypted files
 ;;; (may also be installed as crypt.el)
 
 ;; Authors: Lawrence R. Dodd <dodd@roebling.poly.edu>
 ;;	Rod Whitby <rwhitby@research.canon.oz.au>
 ;;	Kyle E. Jones <kyle@uunet.uu.net>
-;; Maintainer: <karl@cs.umb.edu>
+;; Maintainer: <karl@gnu.org>
 ;; Created: crypt.el in 1988, crypt++.el on 18 Jan 1993.
-;; Version: 2.88
+;; Version: 2.92
 ;; Keywords: extensions
-;; $Id: crypt++.el,v 1.18 2000/06/02 16:27:55 karl Exp $
+;; $Id: crypt++.el,v 1.31 2003/01/17 18:52:17 karl Exp $
 
-;;; Copyright (C) 1998, 99, 2000 Free Software Foundation, Inc.
+;;; Copyright (C) 1998, 1999, 2000, 2001, 2003 Free Software Foundation, Inc.
 ;;; Copyright (C) 1994 Lawrence R. Dodd
 ;;; Copyright (C) 1993 Lawrence R. Dodd and Rod Whitby
 ;;; Copyright (C) 1988, 1989, 1990 Kyle E. Jones
@@ -36,14 +36,13 @@
 ;;; LCD Archive Entry:
 ;;; crypt++|Rod Whitby and Lawrence R. Dodd|karl@gnu.org|
 ;;; Handle compressed and encrypted files.|
-;;; 1999-06-02|2.88|~/misc/crypt++.el.Z|
+;;; 2003-01-17|2.92|~/misc/crypt++.el.Z|
 
 ;;; AVAILABLE:
-;;; ftp://ftp.cs.umb.edu/pub/misc/crypt++.el
+;;; http://www.cs.umb.edu/~karl/crypt++/
 ;;; news:gnu.emacs.sources
 
 ;;; BUG REPORTS:
-;;;
 ;;; Type M-x crypt-submit-report to generate a bug report template or put your
 ;;; cursor at the end of this line and type C-x C-e: (crypt-submit-report)
 ;;;
@@ -55,7 +54,7 @@
 ;;; have one accessible.
 ;;;
 ;;; Main author:
-;;; Lawrence R. Dodd <dodd@roebling.poly.edu>
+;;; Lawrence R. Dodd
 ;;; Polytechnic University
 ;;; Brooklyn, New York USA
 
@@ -66,16 +65,35 @@
 ;;; directory known to Emacs (see `load-path'), byte-compile it (ignore
 ;;; warnings about undefined functions), and put the line:
 ;;;
-;;;                      (require 'crypt++)
+;;;    (require 'crypt++)
 ;;;
 ;;; in your ~/.emacs file or in the file default.el in the ../lisp directory
-;;; of the Emacs distribution.  Do not bother trying to autoload this file;
-;;; this package uses find-file and write-file hooks and thus should be loaded
-;;; the first time you visit any sort of file.  Any package loaded after this
-;;; one that appends something to `write-file-hooks' will not be executed
-;;; because this package writes out the file.  Other packages that append to
-;;; `write-file-hooks' should either be modified to prepend to that hook or be
-;;; loaded before this one (preferably the former).
+;;; of the Emacs distribution.
+;;; 
+;;; For reliable operation with Emacs versions with coding system
+;;; support, you also need:
+;;; 
+;;;    (modify-coding-system-alist 'file "\\.bz\\'" 'no-conversion)
+;;;    (modify-coding-system-alist 'file "\\.bz2\\'" 'no-conversion)
+;;;    (modify-coding-system-alist 'file "\\.gpg\\'" 'no-conversion)
+;;;    (modify-coding-system-alist 'file "\\.gz\\'" 'no-conversion)
+;;;    (modify-coding-system-alist 'file "\\.Z\\'" 'no-conversion)
+;;; 
+;;; With XEmacs, you need 'no-conversion-unix instead of 'no-conversion.
+;;; (Thanks to Jose M. Vidal <vidal@sc.edu>.)
+;;; 
+;;; Otherwise, Emacs tampers with the bytes before crypt++ gets them.
+;;; The above won't help for files without those extensions.  You just
+;;; have to specify the no-conversion coding system manually when
+;;; visiting those files, or set no-conversion for all files if that suits you.
+;;; 
+;;; Do not bother trying to autoload this package; it uses find-file and
+;;; write-file hooks and thus should be loaded the first time you visit
+;;; any sort of file.  Any package loaded after this one that appends
+;;; something to `write-file-hooks' will not be executed because this
+;;; package writes out the file.  Other packages that append to
+;;; `write-file-hooks' should either be modified to prepend to that hook
+;;; or be loaded before this one (preferably the former).
 ;;;
 ;;; An alternative is to stick (require 'crypt) in your ~/.emacs, if it is not
 ;;; already there, and then make a symbolic link from crypt++.el to crypt.el
@@ -195,7 +213,7 @@
 ;;; inside any of the `()' of the above lines, and hit C-h f [RET].
 ;;; 
 ;;; You may wish to use mailcrypt in conjunction with crypt++.
-;;; http://www.nb.net/~lbudney/linux/software/mailcrypt.html
+;;; http://mailcrypt.sourceforge.net/
 
 
 ;;; NOTES ON INTERFACES WITH OTHER PROGRAMS AND PACKAGES:
@@ -768,6 +786,26 @@
 ;;;    kifer@cs.sunysb.edu: (coding-system-for-write 'no-conversion)
 ;;;    ryk@coho.net: (buffer-file-coding-system 'no-conversion)
 ;;;    johnh@isi.edu: mailcrypt & pgp/pgp5.0/gpg.
+;;; 2.89 - 11may01
+;;;    joerg@plate.cx (Joerg Plate): bzip != bzip2.
+;;;    plord@hgmp.mrc.ac.uk (Phillip Lord) (crypt-file-write-hook):
+;;;      (let inhibit-read-only t) so we can save with read-only properties.
+;;;    cro@nca.asu.edu (Charles R. Oldham) (crypt-pgp-pub-encrypt-region):
+;;;      typo, pgp used in gpg block.
+;;;    hull@paracel.com (David Hull): gpg file support, also
+;;;      set coding-system-for-read to 'no-conversion, fixes decryption
+;;;      bug with files beginning with a blank line.
+;;;    kb (crypt-encode-region): set coding-system-for-*.  This
+;;;      backwards incompatibility sure has been painful.
+;;; 2.90 - 19may01
+;;;    kb: pattern for .elc files.
+;;; 2.91 - 15nov01
+;;;	forcer@debian.org (Jorgen Schaefer): mcrypt entry.
+;;;	doc fixes from dmagda@magda.ca (David Magda)
+;;;	  and vidal@sc.edu (Jose Vidal).
+;;; 2.92 - 17jan03
+;;;     kb: no more ftp.cs.umb.edu.
+;;;	mernst@alum.mit.edu (Michael Ernst): rc4 encoding.
 
 
 ;;; Code:
@@ -833,13 +871,13 @@ recovery.")
 ;;; MAGIC-REGEXP-INVERSE will match Sun OS, 4.x BSD, and Ultrix executable
 ;;; magic numbers, so binaries can still be edited (heh) without headaches.
 
-(defconst crypt-encryption-magic-regexp "[\000\200-\237]\\|^-----BEGIN PGP MESSAGE"
+(defconst crypt-encryption-magic-regexp "[\000\200-\237]\\|^-----BEGIN PGP MESSAGE\\|^Salted__"
   "Regexp that must be found very close to beginning of encrypted buffer.
 This is intended to be an internal variable \(not user-visible\).  If you
 change this after crypt++ is loaded then do \\[crypt-rebuild-tables].")
 
 (defconst crypt-encryption-magic-regexp-inverse
-  "\\`\201\001\\|^\\(..\\)?\\([\007\010\013]\001\\|\001[\007\010\013]\\)\\|^From "
+  "\\`\201\001\\|^\\(..\\)?\\([\007\010\013]\001\\|\001[\007\010\013]\\)\\|^From \\|^;ELC"
   "Regexp that must *not* be found very close to beginning of encrypted buffer.
 This is intended to be an internal variable \(not user-visible\).  If you
 change this after crypt++ is loaded then do \\[crypt-rebuild-tables].")
@@ -862,6 +900,7 @@ absence of `crypt-encryption-magic-regexp-inverse'.")
          "Crypt"
          nil
          t
+	 nil
          )
    ;; DES (Cipher Block Chaining - CBC) [DES' default]
    (list 'des
@@ -873,6 +912,7 @@ absence of `crypt-encryption-magic-regexp-inverse'.")
          "DES-CBC"
          nil
          t
+	 nil
          )
    ;; DES (Electronic Code Book - ECB)
    (list 'des-ecb
@@ -884,6 +924,7 @@ absence of `crypt-encryption-magic-regexp-inverse'.")
          "DES-ECB"
          nil
          t
+	 nil
          )
    ;; PGP
    (list 'pgp
@@ -895,6 +936,7 @@ absence of `crypt-encryption-magic-regexp-inverse'.")
          "PGP"
          nil
          t
+	 nil
          )
    ;; PGP with public-key encryption
    (list 'pgp-pub
@@ -906,25 +948,48 @@ absence of `crypt-encryption-magic-regexp-inverse'.")
          "PGP-PUB"
          nil
          t
+	 nil
          )
-   ;; Add new elements here ...
    ;; GPG
    (list 'gpg
          crypt-encryption-magic-regexp crypt-encryption-magic-regexp-inverse
          (or crypt-encryption-file-extension "\\(\\.gpg\\)$")
          "gpg" "gpg"
-         '("-c" "-z3" "-o-")
-         '("-d")
+         '("--batch" "--quiet" "-c" "-o" "-" "--passphrase-fd" "0")
+         '("--batch" "--quiet" "-o" "-" "--passphrase-fd" "0")
          "GPG"
          nil
          t
+	 t
          )
+  (list 'mcrypt
+        crypt-encryption-magic-regexp crypt-encryption-magic-regexp-inverse
+        (or crypt-encryption-file-extension "\\(\\.nc\\)$")
+        "mcrypt" "mcrypt"
+        '("-k")
+        '("-d" "-k")
+        "Rijndael-128"
+        nil
+        t
+	nil
+        )
+  (list 'rc4
+        crypt-encryption-magic-regexp crypt-encryption-magic-regexp-inverse
+        (or crypt-encryption-file-extension "\\(\\.rc4\\)$")
+        "openssl" "openssl"
+        '("enc" "-rc4" "-e" "-k")
+        '("enc" "-rc4" "-d" "-k")
+        "RC4"
+	nil
+        t
+        nil
+        )
+   ;; Add new elements here ...
    ))
 
 (defconst crypt-encryption-alist (crypt-build-encryption-alist)
   "List of elements describing the encryption methods available.
 each element looks like
-
         \(ENCRYPTION-TYPE
           MAGIC-REGEXP MAGIC-REGEXP-INVERSE
           FILE-EXTENSION
@@ -934,8 +999,8 @@ each element looks like
           MINOR-MODE
           GARBAGE-REGEXP-OR-LISPEXP
           FILE-EXTENSION-TRICKS
+          ENCRYPTION-KEY-STDIN
          \)
-
 ENCRYPTION-TYPE is a symbol denoting the encryption type.
 
 MAGIC-REGEXP regexp that must match very close to the beginning of an
@@ -975,6 +1040,10 @@ GARBAGE-REGEXP-OR-LISPEXP dummy variable for compatibility with encoding.
 FILE-EXTENSION-TRICKS is t or nil depending on whether or not tricks
 converting between different encryption types can be done based on
 FILE-EXTENSION; typically t.
+
+ENCRYPTION-KEY-STDIN is t if the encryption key should be passed to the
+encryption program on stdin, or nil if it should be appended to the end
+of the command line.  It is more secure to pass it on stdin.
 ")
 
 
@@ -1082,8 +1151,9 @@ Buffer local and set by `crypt-dos-to-unix-region'")
          nil nil
          "Compress"
          nil
-         t)
-   ;; gzip (GNU zip)
+         t
+         nil)
+   ;; gzip (GNU zip, http://www.gzip.org)
    (list 'gzip
          "\037\213" nil
          "\\(\\.g?z\\)$"
@@ -1091,16 +1161,28 @@ Buffer local and set by `crypt-dos-to-unix-region'")
          "--quiet" "--decompress --quiet"
          "Gzip"
          nil
-         t)
-   ;; bzip (block-sorting, http://www.cs.man.ac.uk/arch/people/j-seward/)
+         t
+         nil)
+   ;; bzip
    (list 'bzip
-         "BZh" nil
-         "\\(\\.bz2?\\)$"
-         "bzip2" "bzip2"
+         "BZ0" nil
+         "\\(\\.bz\\)$"
+         "bzip" "bzip"
          "" "--decompress"
          "Bzip"
          nil
-         t)
+         t
+         nil)
+   ;; bzip2 (block-sorting, http://www.digistar.com/bzip2/)
+   (list 'bzip2
+         "BZh" nil
+         "\\(\\.bz2\\)$"
+         "bzip2" "bzip2"
+         "" "--decompress"
+         "Bzip2"
+         nil
+         t
+	 nil)
    ;; freeze
    (list 'freeze
          "\037\236\\|\037\237" nil
@@ -1109,7 +1191,8 @@ Buffer local and set by `crypt-dos-to-unix-region'")
          "" "-d"
          "Freeze"
          nil
-         crypt-freeze-vs-fortran)
+         crypt-freeze-vs-fortran
+	 nil)
    ;; compact
    (list 'compact
          "\377\037" nil
@@ -1118,8 +1201,8 @@ Buffer local and set by `crypt-dos-to-unix-region'")
          nil nil
          "Compact"
          "^Compression *:.*\n"
-         crypt-compact-vs-C++)
-   
+         crypt-compact-vs-C++
+	 nil)
    ;; DOS (crlf)
    (and crypt-decode-dos-p (list 'dos
          "[^\n\r]*\r\n" nil
@@ -1128,8 +1211,8 @@ Buffer local and set by `crypt-dos-to-unix-region'")
          nil nil
          "Dos"
          nil
+         nil
          nil))
-
     ;; Mac (cr)
     (and crypt-decode-mac-p (list 'mac
           "[ -~]*\r[ -~]" nil
@@ -1138,6 +1221,7 @@ Buffer local and set by `crypt-dos-to-unix-region'")
           nil nil
           "Mac"
           nil
+          nil
           nil))
    )
 )
@@ -1145,7 +1229,6 @@ Buffer local and set by `crypt-dos-to-unix-region'")
 (defconst crypt-encoding-alist (crypt-build-encoding-alist)
   "List of elements describing the encoding methods available.
 each element looks like
-
         \(ENCODING-TYPE
           MAGIC-REGEXP MAGIC-REGEXP-INVERSE
           FILE-EXTENSION
@@ -1154,8 +1237,8 @@ each element looks like
           MINOR-MODE
           GARBAGE-REGEXP-OR-LISPEXP
           FILE-EXTENSION-TRICKS
+          ENCRYPTION-KEY-STDIN
          \)
-
 ENCODING-TYPE is a symbol denoting the encoding type.  Currently known
 encodings are (compress compact freeze gzip).
 
@@ -1192,6 +1275,8 @@ error that results from `sh -c \"cat foo | ENCODE-COMMAND > bar\"'.
 FILE-EXTENSION-TRICKS is t or nil depending on whether or not tricks
 converting between different encoding types can be done based on
 FILE-EXTENSION; typically t.
+
+ENCRYPTION-KEY-STDIN is a dummy variable for compatibility with encryption.
 ")
 
 
@@ -1291,6 +1376,11 @@ Local to all buffers.")
   ;; TYPE.
   (list 'crypt-get-alist-member type 10))
 
+(defmacro crypt-get-encryption-key-stdin (type)
+  ;; Returns t if encryption program takes passphrase on stdin, or nil
+  ;; if at end of command line.
+  (list 'crypt-get-alist-member type 11))
+
 (defun crypt-buffer-save-name (type)
   ;; Returns variable `crypt-buffer-save-TYPE', set to t if encoding with TYPE.
   ;; local to all buffers.
@@ -1352,11 +1442,12 @@ Derived from variable `crypt-encoding-alist' and function
                 (list 'goto-char var)))))
 
 
+;; Hook run for decoding and/or decrypting the contents of a buffer.  Meant
+;; to be called as part of `find-file-hooks'.
+;; 
 (defun crypt-find-file-hook ()
-
-  ;; Hook run for decoding and/or decrypting the contents of a buffer.  Meant
-  ;; to be called as part of `find-file-hooks'
-
+  ;(message "starting crypt-find-file-hook")
+  ;(message "buffer at file hook:\n%s\n--end" (buffer-string))
   (let ((buffer-file-name buffer-file-name)
         (old-buffer-file-name buffer-file-name)
         (old-buffer-modified-p (buffer-modified-p))
@@ -1364,6 +1455,7 @@ Derived from variable `crypt-encoding-alist' and function
 	(binary-process-input t) ; Win32
 	(binary-process-output t) ; Win32
         encrypted encoded buffer-read-only)
+
 
     ;; DECODE AND/OR DECRYPT
     (crypt-save-point
@@ -1716,8 +1808,10 @@ Derived from variable `crypt-encoding-alist' and function
   ;; format.  Terminates calls in `write-file-hooks' and should be at end of
   ;; list.
 
-  (let ((binary-process-input t) ; Win32
-	(binary-process-output t)) ; Win32
+  (let ((binary-process-input t)  ; Win32
+	(binary-process-output t) ; Win32
+	(inhibit-read-only t)     ; else we lose on read-only properties
+       )
 
   ;; Check file-extension for possible toggling of encoding modes.
   (crypt-check-extension-for-encoding)
@@ -1859,7 +1953,7 @@ from Roy Frederick Busdiecker, III (Rick)
 or to 'mailcrypt (see also crypt-pgp-pub-sub-library).")
 
 (defvar crypt-pgp-pub-sub-library 'pgp50
-  "What variant of mailcrypt 3.5.x to use 'pgp, 'pgp50, 'gpg.")
+  "What variant of mailcrypt 3.5.x to use: 'pgp, 'pgp50, 'gpg.")
 
 (defvar crypt-pgp-pub-npgp-userid nil
   "PGP key for the current user.")
@@ -1935,8 +2029,8 @@ Should have a leading 0x.")
       (mc-pgp50-decrypt-region start end))
      ((eq crypt-pgp-pub-sub-library 'gpg)
       (mc-gpg-decrypt-region start end))
-     (t (error "crypt-pgp-pub-decrypt-region: no pgp sub-library."))))
-   (t (error "crypt-pgp-pub-decrypt-region: no pgp library."))))
+     (t (error "crypt-pgp-pub-decrypt-region: no decryption sub-library."))))
+   (t (error "crypt-pgp-pub-decrypt-region: no decryption library."))))
 
 (defun crypt-pgp-pub-encrypt-region (start end)
   (cond
@@ -1976,15 +2070,15 @@ Should have a leading 0x.")
 	(mc-pgp50-encrypt-region recipients start end
 			       (crypt-pgp-pub-mailcrypt-userid) nil)
 	(setq mc-pgp50-comment old-comment))
-       ((eq crypt-pgp-pub-sub-library 'pgp)
+       ((eq crypt-pgp-pub-sub-library 'gpg)
 	(setq old-comment mc-gpg-comment
 	      mc-gpg-comment nil)
-	(mc-pgp-encrypt-region recipients start end
+	(mc-gpg-encrypt-region recipients start end
 			       (crypt-pgp-pub-mailcrypt-userid) nil)
 	(setq mc-gpg-comment old-comment))
-       (t (error "crypt-pgp-pub-decrypt-region: no pgp sub-library.")))
+       (t (error "crypt-pgp-pub-decrypt-region: no encryption sub-library.")))
       (setq mc-pgp-always-sign old-sign)))
-   (t (error "crypt-pgp-pub-decrypt-region: no pgp library."))))
+   (t (error "crypt-pgp-pub-encrypt-region: no encryption library."))))
 
 (defun crypt-encrypt-region (start end key &optional decrypt)
   "Encrypt region START to END using KEY and `crypt-encryption-type'.  When
@@ -2020,6 +2114,7 @@ decryption is done."
    ;; nil values and lists of strings for argument.
 
    (let ((coding-system-for-write 'no-conversion)
+	 (coding-system-for-read 'no-conversion)
 	 prog args)
 
      ;; Get the proper program and arguments.
@@ -2028,6 +2123,22 @@ decryption is done."
                args (crypt-get-decoding-args crypt-encryption-type))
        (setq prog (crypt-get-encoding-program crypt-encryption-type)
              args (crypt-get-encoding-args crypt-encryption-type)))
+
+     ;; Either pass encryption key as first line of region, or
+     ;; as last argument to program.
+     (cond
+      ((crypt-get-encryption-key-stdin crypt-encryption-type)
+	 (progn
+	   (goto-char start)
+	   (insert key "\n")
+	   (setq end (+ end (length key) 1))))
+      ((listp args)
+       (setq args (append args (list key))))
+      ;; nil or "" args - don't pass.
+      ((or (not args) (equal "" args))
+       (setq args key))
+      (t
+       (setq args (concat args " " key))))
 
      ;; Check arguments.
      (cond
@@ -2039,19 +2150,15 @@ decryption is done."
 	   (crypt-pgp-pub-decrypt-region start end)
 	 (crypt-pgp-pub-encrypt-region start end)))
 
-      ;; nil or "" args - don't pass.
-      ((or (not args) (equal "" args))
-       (call-process-region start end prog t '(t nil) nil key))
-
+      ;(message "start=%d end=%d prog=%s args=%s" start end prog args)
       ;; Check if the args are in the form of a list - must use apply.
       ((listp args)
        (apply 'call-process-region
-              (append (list start end prog t (list t nil) nil)
-                    args (list key))))
+              (append (list start end prog t (list t nil) nil) args)))
 
       ;; Default - just a non-null string.
       (t
-       (call-process-region start end prog t '(t nil) nil args key))))))
+       (call-process-region start end prog t '(t nil) nil args))))))
 
 
 (defun crypt-encrypt-buffer (key &optional decrypt buffer)
@@ -2090,7 +2197,9 @@ regexp, or executes a user-defined lisp expression, as defined in
    ;; We define the PROGRAM as `shell-file-name' and have it call the encoding
    ;; or decoding program with the arguments.
 
-   (let (prog args)
+   (let ((coding-system-for-write 'no-conversion)
+	 (coding-system-for-read 'no-conversion)
+         prog args)
 
      ;; Get the proper program and arguments.
      (if decode
@@ -2120,11 +2229,16 @@ regexp, or executes a user-defined lisp expression, as defined in
               (not (eq args t))) ; just in case...
          (setq prog (concat prog " " args))))
 
+       ;(message "start=%d end=%d prog+args=%s" start end prog)
+       ;(message "buffer before:\n%s\n--end" (buffer-string))
        (call-process-region start end shell-file-name t '(t nil) nil
-                            shell-command-switch prog))
+                            shell-command-switch prog)
+       ;(message "buffer after:\n%s\n--end" (buffer-string))
+      )
 
       ;; Otherwise try and eval it.
       (t
+       ;(message "eval prog=%s args=%s" prog args)
        (eval (if args
                  (list prog start end args)
                (list prog start end))))))
@@ -2192,6 +2306,7 @@ regexp, or executes a user-defined lisp expression, as defined in
 Replaces \"\\r\\n\" with \"\\n\" and, if exists, removes ^Z at end of file.
 Sets `crypt-dos-has-ctrl-z'."
   (save-excursion
+    ;(message "doing dos to unix")
     (save-restriction
       (let ((remove-ctrl-z (equal end (point-max))))
         (narrow-to-region start end)
@@ -2209,6 +2324,7 @@ Sets `crypt-dos-has-ctrl-z'."
 Replaces \"\\n\" with \"\\r\\n\" and adds a ^Z at end of file if
 `crypt-dos-has-ctrl-z' is non-nil."
   (save-excursion
+    ;(message "doing unix to dos")
     (save-restriction
       (let ((add-ctrl-z (and crypt-dos-has-ctrl-z
                             (equal end (point-max)))))
@@ -2226,6 +2342,7 @@ Replaces \"\\n\" with \"\\r\\n\" and adds a ^Z at end of file if
   "Converts region from START to END, from mac to unix format.
 Replaces \"\\r\" with \"\\n\"."
   (save-excursion
+    ;(message "doing mac to unix")
     (save-restriction
       (narrow-to-region start end)
       (goto-char (point-min))
@@ -2237,6 +2354,7 @@ Replaces \"\\r\" with \"\\n\"."
   "Converts region from START to END, from mac to unix format.
 Replaces \"\\n\" with \"\\r\"."
   (save-excursion
+    ;(message "doing unix to mac")
     (save-restriction
       (narrow-to-region start end)
       (goto-char (point-min))
@@ -2440,7 +2558,7 @@ encoded."
               ;; Repeat until we get a `throw'.
               (while t
                 (erase-buffer)
-                (message prompt)
+                (message "%s" prompt)	; avoid errors if "%" in prompt
 
                 ;; Read string.
                 (while (not (memq (setq char (read-char)) '(?\C-m ?\C-j)))
@@ -2639,7 +2757,6 @@ nil says to ask before doing this.")
 
 ;;; Bind `crypt-insert-file' over wherever `insert-file' is bound?
 (defun crypt-bind-insert-file ()
-
   "Bind `crypt-insert-file' in place of `insert-file' or reverse based on
 `crypt-bind-insert-file'.  Part of `after-init-hook'."
 
@@ -2676,11 +2793,10 @@ see variable `crypt-auto-decode-insert'."
   (let ((tem (crypt-insert-file-contents filename))) ; use crypt++ to insert
     (push-mark (+ (point) (car (cdr tem))))))
 
+;; Similar to `insert-file-contents' except decoding/decrypting of FILE
+;; attempted.  See `crypt-insert-file' and `crypt-auto-decode-insert'
+;; 
 (defun crypt-insert-file-contents (file)
-
-  ;; Similar to `insert-file-contents' except decoding/decrypting of FILE
-  ;; attempted.  See `crypt-insert-file' and `crypt-auto-decode-insert'
-
   (let (temp-buffer
         temp-list
         (crypt-auto-decode-buffer crypt-auto-decode-insert)
@@ -2725,7 +2841,7 @@ see variable `crypt-auto-decode-insert'."
 ;;; This section is provided for reports.
 ;;; Using Barry A. Warsaw's reporter.el
 
-(defconst crypt-version "2.88"
+(defconst crypt-version "2.92"
   "Revision number of crypt++.el -- handles compressed and encrypted files.
 Type \\[crypt-submit-report] to send a bug report.  Available via anonymous
 ftp at ftp://ftp.cs.umb.edu/pub/misc/crypt++.el")
