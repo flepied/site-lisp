@@ -2,9 +2,9 @@
 ;; header.el --- Support for creation and automatic update of file headers
 ;; Author          : Lynn Slater
 ;; Created On      : Tue Aug  4 17:06:46 1987
-;; Last Modified By: Frederic LEPIED (steria)
-;; Last Modified On: Fri Feb 25 15:46:26 1994
-;; Update Count    : 133
+;; Last Modified By: Frederic Lepied
+;; Last Modified On: Thu Aug  9 06:56:24 2001
+;; Update Count    : 134
 ;; Status          : OK
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Copyright (C) 1988 Lynn Randolph Slater, Jr.
@@ -91,7 +91,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; User/Site Customizable Variables
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defvar header-max 2000
+(defvar header-max 300
   "Is the number of characters at the start of a buffer that will be
    searched for header info to automatically update.")
 
