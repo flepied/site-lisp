@@ -999,7 +999,7 @@ command."
 		 (goto-char (point-min))
 		 (search-forward-regexp (concat field ": *\\(.+\\).*$") max)
 		 (match-string 1) )))
-      (if (string-match "%{\\(.*\\)}" str)
+      (if (string-match "%{?\\(.*\\)}?" str)
 	  (progn
 	    (goto-char (point-min))
 	    (search-forward-regexp (concat "%define +" (substring str (match-beginning 1)
