@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: prog.el,v 1.1 1999-12-09 07:34:42 flepied Exp $
+;; Version: $Id: prog.el,v 1.2 2001-10-22 16:13:20 flepied Exp $
 ;; Keywords: 
 ;;
 
@@ -58,8 +58,8 @@ moves point to beginning of line." t nil)
 if line is just a comment, moves to end of line.  otherwise, on
 first invocation moves point to end of code line.  second invocation
 moves point to end of line." t nil)
- (define-key shared-lisp-mode-map "\C-a" 'beginning-of-code-line)
- (define-key shared-lisp-mode-map "\C-e" 'end-of-code-line)
+; (define-key shared-lisp-mode-map "\C-a" 'beginning-of-code-line)
+; (define-key shared-lisp-mode-map "\C-e" 'end-of-code-line)
  (define-key emacs-lisp-mode-map "\C-a" 'beginning-of-code-line)
  (define-key emacs-lisp-mode-map "\C-e" 'end-of-code-line)
 
@@ -337,6 +337,6 @@ file modes."
     (goto-char (point-min))
     (when (re-search-forward "^<<<<<<< " nil t)
       (simple-merge-minor-mode-mode 1))))
-(add-hook 'find-file-hooks 'sm-try-simple-merge)
+;(add-hook 'find-file-hooks 'sm-try-simple-merge)
 
 ;;; 35prog.el ends here
