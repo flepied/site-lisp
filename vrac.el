@@ -111,4 +111,6 @@ Upon exit from recursive edit, restore restrictions, point and mark."
     (narrow-to-region beg end)
     (compilation-minor-mode)))
 
+(provide 'vrac)
+
 ;;; end of vrac.el
