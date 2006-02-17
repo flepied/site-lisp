@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: template.el,v 1.3 2000-06-06 08:12:07 flepied Exp $
+;; Version: $Id: template.el,v 1.4 2006-02-17 18:18:01 fred Exp $
 ;; Keywords: 
 ;;
 
@@ -37,12 +37,13 @@
 	("\\.py$"       . "temp.py")
 	("local.rules"  . "local.rules")
 	("\\.spec$"     . "temp.spec")
+	("spec[0-9]+.xml$" . "temp.spec.xml")
 	))
 
 (setq dc-auto-insert-mode-alist
       '((emacs-lisp-mode . "temp.el")
 	(scheme-mode     . "temp.scm")
-	(perl-mode       . "temp.perl")
+	(perl-mode       . "temp.pl")
 	))
 
 (setq dc-expandable-variables-alist
@@ -59,6 +60,8 @@
     ( "@VERSION@"	(version (directory-of-file buffer-file-name)))
     ( "@PACKAGE@"	(package (directory-of-file buffer-file-name)))
 
+    ( "@SPECNUMBER@"	(number (file-name-nondirectory buffer-file-name)))
+    
     ( "@DOT@"           (setq dc-initial-dot-position (match-beginning 0))
                         "" )
     ( "@UPPER_CASE_FILE_NAME@"	(cpp-filename (file-name-nondirectory buffer-file-name)))
@@ -96,6 +99,13 @@
   "return the extracted version from path/package-version"
   (message "version %s" dir)
   (if (string-match ".*-\\([0-9p.]+$\\)" dir)
+      (substring dir (match-beginning 1) (match-end 1))
+    "") )
+
+(defun number (dir)
+  "return the extracted version from path/package-version"
+  (message "version %s" dir)
+  (if (string-match "\\([0-9]+\\)" dir)
       (substring dir (match-beginning 1) (match-end 1))
     "") )
 
