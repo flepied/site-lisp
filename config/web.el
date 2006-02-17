@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: web.el,v 1.2 2000-06-06 08:12:07 flepied Exp $
+;; Version: $Id: web.el,v 1.3 2006-02-17 18:19:00 fred Exp $
 ;; Keywords: 
 ;;
 
@@ -78,5 +78,12 @@ gotten from `http://www.cs.brown.edu/people/nwv/'." t nil)
 
 (add-hook 'dired-mode-hook (function (lambda()
 				       (local-set-key "W" 'dired-open-w3))))
+
+(setq browse-url-netscape-program "mozilla-firefox")
+
+
+(autoload 'css-mode "css-mode")
+(setq auto-mode-alist       
+     (cons '("\\.css\\'" . css-mode) auto-mode-alist))
 
 ;;; 60web.el ends here
