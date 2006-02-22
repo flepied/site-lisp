@@ -4,9 +4,19 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: web.el,v 1.3 2006-02-17 18:19:00 fred Exp $
+;; Version: $Id: web.el,v 1.4 2006-02-22 20:20:05 fred Exp $
 ;; Keywords: 
 ;;
+
+(defun yubnub (command)
+  "Use `browse-url' to submits a command to yubnub and opens
+result in an external browser defined in `browse-url-browser-function'.
+
+To get started  `M-x yubnub <RET> ls <RET>' will return a list of 
+all yubnub commands."
+  (interactive "sCommand: ")
+  (browse-url 
+   (concat "http://yubnub.org/parser/parse?command=" command)))
 
 ;;=============================================================================
 ;; Autoloaded section.
