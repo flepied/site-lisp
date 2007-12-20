@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: color.el,v 1.3 2001-10-22 16:06:10 flepied Exp $
+;; Version: $Id: color.el,v 1.4 2007-12-20 08:41:56 fred Exp $
 ;; Keywords: 
 ;;
 
@@ -158,7 +158,8 @@ Turn off blank visualization." t nil)
 ;;=============================================================================
 (if (or window-system is-xemacs (>= emacs-major-version 21))
     (progn
-      (setq font-lock-support-mode 'lazy-lock-mode)
+      (if (fboundp 'lazy-lock-mode)
+	  (setq font-lock-support-mode 'lazy-lock-mode))
       (if (fboundp 'global-font-lock-mode)
 	  (global-font-lock-mode 1 t)
 	(add-hook 'find-file-hooks (function (lambda() (turn-on-font-lock))) t))
