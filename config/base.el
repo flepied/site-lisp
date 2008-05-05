@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: base.el,v 1.7 2004-06-17 06:58:45 flepied Exp $
+;; Version: $Id: base.el,v 1.8 2008-05-05 19:26:27 fred Exp $
 ;; Keywords: 
 ;;
 
@@ -309,7 +309,8 @@ Upon exit from recursive edit, restore restrictions, point and mark." t nil)
 ;;=============================================================================
 ;; pour avoir le minibuffer qui se retaille automatiquement
 ;;=============================================================================
-(resize-minibuffer-mode 1)
+(if (fboundp 'resize-minibuffer-mode)
+    (resize-minibuffer-mode 1))
 
 ;;=============================================================================
 ;;=============================================================================
