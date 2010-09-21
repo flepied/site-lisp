@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: compil.el,v 1.2 2004-05-05 06:57:04 flepied Exp $
+;; Version: $Id: compil.el,v 1.3 2010-09-21 08:01:35 fred Exp $
 ;; Keywords: 
 ;;
 
@@ -23,8 +23,6 @@
   "*Run `grep` on the marked (or next prefix ARG) files." t)
 (autoload (function dired-do-igrep-find) "igrep"
   "*Run `grep` via `find` on the marked (or next prefix ARG) directories." t)
-(autoload (function grep) "igrep"
-  "*Run `grep` PROGRAM to match EXPRESSION in FILES..." t)
 (autoload (function egrep) "igrep"
   "*Run `egrep`..." t)
 (autoload (function fgrep) "igrep"

@@ -4,7 +4,7 @@
 ;;
 ;; Author: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
 ;; Maintainer: Frederic Lepied <Frederic.Lepied@sugix.frmug.org>
-;; Version: $Id: base.el,v 1.8 2008-05-05 19:26:27 fred Exp $
+;; Version: $Id: base.el,v 1.9 2010-09-21 08:01:35 fred Exp $
 ;; Keywords: 
 ;;
 
@@ -144,7 +144,7 @@ Upon exit from recursive edit, restore restrictions, point and mark." t nil)
 ;;=============================================================================
 ;; Visualisation des lignes trop longues et tronquature des lignes par defaut.
 ;;=============================================================================
-(require 'auto-show)
+;;(require 'auto-show)
 ;;(set-default 'truncate-lines t )
 
 ;;=============================================================================
