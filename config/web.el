@@ -96,4 +96,6 @@ gotten from `http://www.cs.brown.edu/people/nwv/'." t nil)
 (setq auto-mode-alist       
      (cons '("\\.css\\'" . css-mode) auto-mode-alist))
 
+(setq auto-mode-alist (cons '("\\.x[ms]l\\'" . nxml-mode) auto-mode-alist))
+
 ;;; 60web.el ends here
