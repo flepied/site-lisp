@@ -12,11 +12,11 @@
 ;; Autoloaded section.
 ;;=============================================================================
 ;; en attendant la correction du package
-(autoload 'debian-changelog-mode "debian-changelog-mode"
-  "Major mode for editing Debian-style change logs.
-Runs `debian-changelog-mode-hook' if it exists." t)
-
-(autoload 'debian-bug "debian-bug" "Submit via mail a bug report do Debian" t)
+;; (autoload 'debian-changelog-mode "debian-changelog-mode"
+;;   "Major mode for editing Debian-style change logs.
+;; Runs `debian-changelog-mode-hook' if it exists." t)
+;; 
+;; (autoload 'debian-bug "debian-bug" "Submit via mail a bug report do Debian" t)
 
 
 ;;;###
