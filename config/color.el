@@ -161,7 +161,7 @@ Turn off blank visualization." t nil)
       (if (fboundp 'lazy-lock-mode)
 	  (setq font-lock-support-mode 'lazy-lock-mode))
       (if (fboundp 'global-font-lock-mode)
-	  (global-font-lock-mode 1 t)
+	  (global-font-lock-mode 1)
 	(add-hook 'find-file-hooks (function (lambda() (turn-on-font-lock))) t))
 
 ;;      (and (not is-xemacs)
