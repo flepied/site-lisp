@@ -128,7 +128,8 @@ Number of entries for each category is given by
 				(european-calendar)
 				(setq auto-mode-alist
 				      (cons (cons (file-name-nondirectory diary-file) 'edit-diary-mode) auto-mode-alist))
-				(define-key calendar-mode-map "C" 'compute-cra)))
+;				(define-key calendar-mode-map "C" 'compute-cra)
+				))
 
 ;(require 'calendar)			; european-calendar n'est pas autoload
 
