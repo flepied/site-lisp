@@ -166,36 +166,36 @@ Upon exit from recursive edit, restore restrictions, point and mark." t nil)
 ;;=============================================================================
 ;; imenu stuff
 ;;=============================================================================
-(if (and nil (fboundp 'imenu--sort-by-name))
-    (progn
-      (setq imenu-sort-function 'imenu--sort-by-name)
-      (define-key global-map [S-down-mouse-3] 'imenu)
-      (require 'imenu)
+;; (if (and nil (fboundp 'imenu--sort-by-name))
+;;     (progn
+;;       (setq imenu-sort-function 'imenu--sort-by-name)
+;;       (define-key global-map [S-down-mouse-3] 'imenu)
+;;       (require 'imenu)
 
-      (add-hook 'find-file-hooks 'turn-on-imenu-if-enabled t)
-      (defun turn-on-imenu-if-enabled ()
-	"Check if imenu can be turned on using an heuristic..."
-	(if (or (and (eq imenu-create-index-function
-			 'imenu-default-create-index-function)
-		     (or imenu-extract-index-name-function
-			 imenu-generic-expression))
-		(and imenu-create-index-function
-		     (not (eq imenu-create-index-function
-			      'imenu-default-create-index-function))))
-	    (condition-case nil
-		(imenu-add-to-menubar "Index")
-	      (error nil))))
+;;       (add-hook 'find-file-hooks 'turn-on-imenu-if-enabled t)
+;;       (defun turn-on-imenu-if-enabled ()
+;; 	"Check if imenu can be turned on using an heuristic..."
+;; 	(if (or (and (eq imenu-create-index-function
+;; 			 'imenu-default-create-index-function)
+;; 		     (or imenu-extract-index-name-function
+;; 			 imenu-generic-expression))
+;; 		(and imenu-create-index-function
+;; 		     (not (eq imenu-create-index-function
+;; 			      'imenu-default-create-index-function))))
+;; 	    (condition-case nil
+;; 		(imenu-add-to-menubar "Index")
+;; 	      (error nil))))
 
 ;;=============================================================================
 ;; Affiche les noms des fonctions (index créés par imenu) dans le modeline.
 ;;=============================================================================
-      (setq which-func-unknown ""
-	    which-func-modes 'ANY
-	    which-func-amodes 'ANY
-      which-func-format '(" [" which-func-current "]"))
-      (load "which-function")
-      (which-func-mode)
-      ))
+      ;; (setq which-func-unknown ""
+      ;; 	    which-func-modes 'ANY
+      ;; 	    which-func-amodes 'ANY
+      ;; which-func-format '(" [" which-func-current "]"))
+      ;; (load "which-function")
+      ;; (which-func-mode)
+      ;; ))
 
 ;;=============================================================================
 ;; pas de toolbar en emacs 21
