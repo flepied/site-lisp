@@ -271,7 +271,8 @@ default suggestion will be presented. " t nil)
 	     (add-hook 'expand-expand-hook 'indent-according-to-mode)
 	     (add-hook 'expand-jump-hook 'indent-according-to-mode)
 	     ;; (control shift tab) doesn't work with my bindings
-	     (define-key abbrev-mode-map '[(meta control tab)] 'expand-jump-to-previous-mark))))
+	     ;;(define-key abbrev-mode-map '[(meta control tab)] 'expand-jump-to-previous-mark)
+	     )))
 
 ;; add make to script mode list to enable debian rules.
 (setq interpreter-mode-alist (cons '("make" . makefile-mode) interpreter-mode-alist))
