@@ -30,10 +30,12 @@
 (setq dc-auto-insert-directory (expand-file-name "~/templates/"))
 
 (setq dc-auto-insert-alist
-      '(("\\.c$"        . "temp.c")
+      '(("test_.*\\.cc$" . "test.cc")
+	("\\.c$"        . "temp.c")
 	("\\.h$"        . "temp.h")
 	("\\.sh$"	. "temp.sh")
 	("[0-9][0-9].*\\.el$" . "config.el")
+	("test_.*\\.py$" . "test.py")
 	("\\.py$"       . "temp.py")
 	("local.rules"  . "local.rules")
 	("\\.spec$"     . "temp.spec")
@@ -49,6 +51,7 @@
 (setq dc-expandable-variables-alist
   '(( "@BASEFILENAME@"  (file-name-nondirectory buffer-file-name) )
     ( "@BASEFILENAME_WITHOUT_EXT@"  (file-name-without-ext buffer-file-name) )
+    ( "@BASEFILENAME_WITHOUT_TEST@"  (file-name-without-test buffer-file-name) )
     ( "@FILENAME@"      buffer-file-name )
     ( "@DATE@"          (current-time-string) )
     ( "@YEAR@"		(substring (current-time-string) 20 24) )
@@ -65,6 +68,7 @@
     ( "@DOT@"           (setq dc-initial-dot-position (match-beginning 0))
                         "" )
     ( "@UPPER_CASE_FILE_NAME@"	(cpp-filename (file-name-nondirectory buffer-file-name)))
+    ( "@CAMELIZED_FILE_NAME@"	(camelized-filename (file-name-nondirectory buffer-file-name)))
     ( "@FILE_NAME@"		(file-name-nondirectory (file-name-nondirectory buffer-file-name)))
     ( "@CLASS_NAME@"		(class-name (file-name-nondirectory buffer-file-name)))
     ( "@INCLUDE_FILE_NAME@"	(include-file-name (file-name-nondirectory buffer-file-name)))
@@ -123,6 +127,13 @@
 	(substring filename (match-beginning 1) (match-end 1))
       filename)))
 
+(defun file-name-without-test (name)
+  "return the file name without the test prefix. ex test_toto.cc => toto"
+  (let ((filename (file-name-nondirectory name)))
+    (if (string-match "test_\\(.+\\)\\.[^.]*" filename)
+	(substring filename (match-beginning 1) (match-end 1))
+      filename)))
+
 (defun mode()
   "return the major mode without -mode"
   (let ((name (symbol-name major-mode)))
@@ -140,6 +151,12 @@
   "return the word with the first letter capitalized"
   (concat (capitalize (substring s 0 1))
 	  (substring s 1)))
+
+(defun camelized-filename (s)
+  "return the word with each first letter after a _ capitalized: Ex: test_toto.c: TestToto"
+  (let ((name (file-name-without-ext s)))
+    (apply (function concat) (mapcar (function capitalize-first-letter) (split-string name "_")))
+    ))
 
 (defun class-name (file)
   "return a class name based on a file name.
