@@ -190,8 +190,8 @@ With arg, turn CWarn mode on globally if and only if arg is positive." t nil)
 (add-hook 'c-mode-hook
 	  (function
 	   (lambda()
+	     (abbrev-mode 1)
 	     (expand-add-abbrevs c-mode-abbrev-table c-expand-list)
-	     (expand-mode)
 	     (setq fold-end-regexp "}"
 		   fold-begin-regexp "{"
 		   fold-end-or-begin-regexp "[{}]")
@@ -203,8 +203,8 @@ With arg, turn CWarn mode on globally if and only if arg is positive." t nil)
 (add-hook 'c++-mode-hook
           (function
            (lambda()
+             (abbrev-mode 1)
              (expand-add-abbrevs c++-mode-abbrev-table c-expand-list)
-             (expand-mode)
 	     (foldingo-activation)
 	     (define-key c++-mode-map "\C-a" 'beginning-of-code-line)
 	     (define-key c++-mode-map "\C-e" 'end-of-code-line)
