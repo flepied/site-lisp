@@ -184,4 +184,12 @@ toto.XX => toto.h"
 	      (substring file 0 (match-beginning 0))
 	    file) ".h"))
 
+(if (file-directory-p (expand-file-name "~/emacs/yasnippet"))
+    (progn
+      (add-to-list 'load-path
+		   "~/emacs/yasnippet")
+      (require 'yasnippet)
+      (yas/global-mode 1)
+      ))
+
 ;;; 80template.el ends here
