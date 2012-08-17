@@ -187,27 +187,29 @@ With arg, turn CWarn mode on globally if and only if arg is positive." t nil)
 			  ("main" "int\nmain(int argc, char * argv[])\n{\n\n}\n" 37))
   "")
 
+(defun my-c-hook(abbrev-table mode-map)
+  (abbrev-mode 1)
+  (expand-add-abbrevs abbrev-table c-expand-list)
+  (c-toggle-hungry-state 1)
+  (c-toggle-auto-state 1)
+  (setq fold-end-regexp "}"
+	fold-begin-regexp "{"
+	fold-end-or-begin-regexp "[{}]")
+  (foldingo-activation)
+  (define-key mode-map "\C-a" 'beginning-of-code-line)
+  (define-key mode-map "\C-e" 'end-of-code-line)
+  )
+
 (add-hook 'c-mode-hook
 	  (function
 	   (lambda()
-	     (abbrev-mode 1)
-	     (expand-add-abbrevs c-mode-abbrev-table c-expand-list)
-	     (setq fold-end-regexp "}"
-		   fold-begin-regexp "{"
-		   fold-end-or-begin-regexp "[{}]")
-	     (foldingo-activation)
-	     (define-key c-mode-map "\C-a" 'beginning-of-code-line)
-	     (define-key c-mode-map "\C-e" 'end-of-code-line)
+	     (my-c-hook c-mode-abbrev-table c-mode-map)
 	     )))
 
 (add-hook 'c++-mode-hook
-          (function
-           (lambda()
-             (abbrev-mode 1)
-             (expand-add-abbrevs c++-mode-abbrev-table c-expand-list)
-	     (foldingo-activation)
-	     (define-key c++-mode-map "\C-a" 'beginning-of-code-line)
-	     (define-key c++-mode-map "\C-e" 'end-of-code-line)
+	  (function
+	   (lambda()
+	     (my-c-hook c++-mode-abbrev-table c++-mode-map)
 	     )))
 
 ;; to prevent fill paragraph to eat the last comment line
