@@ -144,7 +144,9 @@
   (upcase
    (concat "_"
 	   ;; make sure only word constituents are used in #ifdef's
-	   (mapcar '(lambda (val) (if (eq (char-syntax val) ?w) val ?_))
+	   (mapcar '(lambda (val) (if (and (eq (char-syntax val) ?w)
+					   (not (eq val ?.)))
+				      val ?_))
 		   filename))))
 
 (defun capitalize-first-letter (s)
