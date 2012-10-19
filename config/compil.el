@@ -315,6 +315,15 @@ Bound on \\[mode-compile-kill]." t nil)
 )
 
 ;;=============================================================================
+;; force the modeline's background in red on error and green on success
+;;=============================================================================
+(defun compilation-finish(buffer msg)
+  (with-current-buffer buffer
+    (set-face-background 'mode-line (if (> exit-status 0) "red" "green"))))
+
+(add-hook 'compilation-finish-functions (function compilation-finish))
+
+;;=============================================================================
 ;; misc grep functions
 ;;=============================================================================
 (and config-use-igrep
