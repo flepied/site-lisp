@@ -252,6 +252,7 @@ Upon exit from recursive edit, restore restrictions, point and mark." t nil)
 (global-set-key '[print] 'ps-spool-buffer-with-faces)
 (global-set-key '[(shift print)] 'ps-spool-region-with-faces)
 (global-set-key '[(control print)] 'ps-despool)
+(global-set-key [C-tab] (quote other-window))
 
 (if (not window-system)
     (progn
