@@ -280,6 +280,18 @@ default suggestion will be presented. " t nil)
 ;; context help binding
 (define-key help-map '[(control i)] 'word-help)
 
+;; unit test support
+(define-key global-map (kbd "C-c t") 'run-unit-tests)
+(define-key global-map (kbd "C-c s") 'set-unit-test-command)
+(define-key global-map (kbd "C-c o") 'open-unit-test-file)
+
+(autoload (quote run-unit-tests) "unit-test" "" t nil)
+(autoload (quote set-unit-test-command) "unit-test" "" t nil)
+(autoload (quote open-unit-test-file) "unit-test" "" t nil)
+(autoload (quote show-test-status) "unit-test" "" nil nil)
+
+(setq-default unit-test-command (lambda () (zerop (shell-command "make test"))))
+
 ;;==============================================================================
 ;; suppress emacs 19.29 CVS support
 ;;==============================================================================

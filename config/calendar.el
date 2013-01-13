@@ -174,7 +174,7 @@ Number of entries for each category is given by
 (autoload 'calendar-one-frame-setup "cal-x" t)
 
 ;; todo mode bindings
-(global-set-key "\C-ct" 'todo-show)     ; switch to TODO buffer
+;(global-set-key "\C-ct" 'todo-show)     ; switch to TODO buffer
 (global-set-key "\C-ci" 'todo-cmd-inst) ; insert new item
 
 ;; steno bindings
