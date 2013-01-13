@@ -27,13 +27,16 @@ Run pdb on program FILE in buffer *gud-FILE*.
 
 
 
+(autoload (quote nosetests-compile) "nosetests" "" t nil)
+
 ;;=============================================================================
 ;; Configuration section.
 ;;=============================================================================
 (setq auto-mode-alist
       (cons '("\\.py$" . python-mode) auto-mode-alist))
 
-(when (load "flymake" t) 
+(when (load "flymake" t)
+
   (defun flymake-pyflakes-init () 
     (let* ((temp-file (flymake-init-create-temp-buffer-copy 
 		       'flymake-create-temp-inplace)) 
@@ -41,9 +44,13 @@ Run pdb on program FILE in buffer *gud-FILE*.
 			temp-file 
 			(file-name-directory buffer-file-name)))) 
       (list "pyflakes" (list local-file)))) 
-  
+
   (add-to-list 'flymake-allowed-file-name-masks 
-	       '("\\.py\\'" flymake-pyflakes-init)))
+	       '("\\.py\\'" flymake-pyflakes-init))
+
+  (add-hook 'find-file-hook 'flymake-find-file-hook)
+  )
+
 
 (defun pydoc (arg)
   (interactive "sPydoc entry : ")
@@ -51,12 +58,12 @@ Run pdb on program FILE in buffer *gud-FILE*.
 	(Man-switches ""))
     (man arg)))
 
-(add-hook 'find-file-hook 'flymake-find-file-hook)
-
 (add-hook 'python-mode-hook (function (lambda()
-					(require 'pymacs)
 					(define-key python-mode-map [(shift f1)] 'pydoc)
+					(define-key python-mode-map (kbd "C-S-t") (function nosetests-compile))
+					;(require 'pymacs)
 					;(pymacs-load "ropemacs" "rope-")
 					) ))
+
 
 ;;; 40python-prog.el ends here

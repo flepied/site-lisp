@@ -1,0 +1,1 @@
+/home/fred/external/emacs-config/modes/nosetests.el
